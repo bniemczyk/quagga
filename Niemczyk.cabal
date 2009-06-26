@@ -1,0 +1,18 @@
+Cabal-Version:  >= 1.2
+Name:			Niemczyk
+Version:		0.0.1
+Description:	Code generation toolkit
+Author:			Brandon Niemczyk
+Build-Type:		Simple
+License-File:   LICENSE
+
+Library
+    Build-Depends:		base
+    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Guic.Extjs.Compile Parser
+    other-modules:      Util Guic.Extjs.Abscodegen Guic.Extjs.Printcodegen 
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1
+
+Executable csv2sql
+    Main-Is: csv2sql.hs
+    Build-Depends: base
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1
