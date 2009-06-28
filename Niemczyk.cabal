@@ -8,11 +8,16 @@ License-File:   LICENSE
 
 Library
     Build-Depends:		base
-    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Guic.Extjs.Compile Parser
-    other-modules:      Util Guic.Extjs.Abscodegen Guic.Extjs.Printcodegen 
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1
+    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Parser
+    other-modules:      Util 
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty
 
 Executable csv2sql
     Main-Is: csv2sql.hs
+    Build-Depends: base
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1
+
+Executable extjs-gen
+    Main-Is: extjs-gen.hs
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1

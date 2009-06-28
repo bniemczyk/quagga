@@ -31,6 +31,9 @@ data GridColumn = GridColumn { gcol_name :: String, gcol_caption :: String }
 data Grid = SimpleGrid [GridColumn]
 	deriving (Eq, Show, Read)
 
+type ParamName = String
+type ParamValue = { param_name :: ParamName }
+
 data Widget =
 		EmptyWidget
 		| ButtonWidget { btn_caption :: String, btn_onClick :: [Action] }
@@ -43,6 +46,7 @@ data Widget =
 		| VLayoutContainer [Widget]
 		| AttrContainer { attr_widget :: Attributed Widget }
         | CompiledWidget { cwidget :: Widget, cwidget_attrs :: [(String, String)] }
+        | ParamWidget { param_list :: [ParamName], param_widget :: Widget }
 	deriving (Eq, Show, Read)
 
 buttonw caption = ButtonWidget caption []
@@ -54,6 +58,7 @@ hlayoutw = HLayoutContainer []
 vlayoutw = VLayoutContainer []
 inputw iname itype = FormInputWidget iname itype
 attrw key val ws = AttrContainer $ attr key val ws
+paramw pname widget = ParamWidget pname widget
 
 data WidgetBuilder a where
 		WidgetBuilder	:: (Widget -> (a, Widget)) -> WidgetBuilder a
