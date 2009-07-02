@@ -1,0 +1,2 @@
+main =
+  ((putStrLn) "test success!")

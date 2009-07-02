@@ -18,4 +18,9 @@ shell: FORCE
 sdist: FORCE
 	runhaskell Setup.hs sdist
 
+test: build FORCE
+	dist/build/lc/lc test.lc |tee test.hs
+	ghc --make test.hs -fglasgow-exts
+	./test
+
 FORCE:

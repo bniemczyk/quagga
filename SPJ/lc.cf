@@ -1,0 +1,13 @@
+entrypoints Program ;
+
+Prog.				Program ::= [Stm] ;
+
+terminator Stm ";" ;
+Equality.			Stm ::= Ident "=" Exp ;
+
+PExp.               Exp ::= "(" Exp ")" ;
+ConstantStringTerm. Exp ::= String ;
+ConstantIntTerm.    Exp ::= Integer ;
+VariableTerm.       Exp ::= Ident ;
+ApplicationTerm.    Exp ::= Exp Exp ;
+AbstractionTerm.    Exp ::= "lambda" Ident "." Exp ;

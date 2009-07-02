@@ -32,7 +32,6 @@ data Grid = SimpleGrid [GridColumn]
 	deriving (Eq, Show, Read)
 
 type ParamName = String
-type ParamValue = { param_name :: ParamName }
 
 data Widget =
 		EmptyWidget
