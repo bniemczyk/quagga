@@ -1,5 +1,7 @@
+fact = 
+    letrec fact = lambda n . (n == 1) ? 1 : n * fact (n - 1) in fact
+    ;
+
 main = 
-    // simple recursive function
-    letrec fact = lambda n . (n == 1) ? 1 : n * fact (n - 1) in
     putStrLn (show (fact 5))
     ;
