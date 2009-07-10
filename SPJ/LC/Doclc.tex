@@ -36,10 +36,10 @@ Integer literals \nonterminal{Int}\ are nonempty sequences of digits.
 
 
 InfixToken literals are recognized by the regular expression
-\((\mbox{`{$-$}'} \mid \mbox{`{$+$}'} \mid \mbox{`/'} \mid \mbox{`{$=$}'} \mid \mbox{`*'})+\)
+\((\mbox{`{$-$}'} \mid \mbox{`{$+$}'} \mid \mbox{`/'} \mid \mbox{`{$=$}'} \mid \mbox{`*'} \mid \mbox{`{$<$}'} \mid \mbox{`{$>$}'} \mid \mbox{`{$|$}'} \mid \mbox{`\&'})+\)
 
 Identifier literals are recognized by the regular expression
-\({\nonterminal{letter}} ({\nonterminal{letter}} \mid {\nonterminal{digit}} \mid \mbox{`\_'} \mid \mbox{`''})*\)
+\({\nonterminal{letter}} ({\nonterminal{letter}} \mid {\nonterminal{digit}} \mid \mbox{`\_'})*\)
 
 
 \subsection*{Reserved words and symbols}
@@ -48,16 +48,16 @@ The set of reserved words is the set of terminals appearing in the grammar. Thos
 The reserved words used in lc are the following: \\
 
 \begin{tabular}{lll}
-{\reserved{in}} &{\reserved{lambda}} &{\reserved{let}} \\
-{\reserved{letrec}} & & \\
+{\reserved{else}} &{\reserved{if}} &{\reserved{in}} \\
+{\reserved{lambda}} &{\reserved{let}} &{\reserved{letrec}} \\
+{\reserved{then}} & & \\
 \end{tabular}\\
 
 The symbols used in lc are the following: \\
 
 \begin{tabular}{lll}
 {\symb{;}} &{\symb{{$=$}}} &{\symb{(}} \\
-{\symb{)}} &{\symb{.}} &{\symb{?}} \\
-{\symb{:}} & & \\
+{\symb{)}} &{\symb{.}} & \\
 \end{tabular}\\
 
 \subsection*{Comments}
@@ -83,16 +83,37 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Exp}} & {\arrow}  &{\terminal{(}} {\nonterminal{Exp}} {\terminal{)}}  \\
+{\nonterminal{Exp5}} & {\arrow}  &{\terminal{(}} {\nonterminal{Exp}} {\terminal{)}}  \\
  & {\delimit}  &{\nonterminal{String}}  \\
  & {\delimit}  &{\nonterminal{Integer}}  \\
  & {\delimit}  &{\nonterminal{Identifier}}  \\
- & {\delimit}  &{\nonterminal{Exp}} {\nonterminal{Exp}}  \\
- & {\delimit}  &{\terminal{lambda}} {\nonterminal{Identifier}} {\terminal{.}} {\nonterminal{Exp}}  \\
+ & {\delimit}  &{\terminal{(}} {\nonterminal{Exp}} {\terminal{)}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Exp4}} & {\arrow}  &{\nonterminal{Exp}} {\nonterminal{Exp5}}  \\
+ & {\delimit}  &{\nonterminal{Exp5}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Exp1}} & {\arrow}  &{\terminal{lambda}} {\nonterminal{Identifier}} {\terminal{.}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\terminal{let}} {\nonterminal{Identifier}} {\terminal{{$=$}}} {\nonterminal{Exp}} {\terminal{in}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\terminal{letrec}} {\nonterminal{Identifier}} {\terminal{{$=$}}} {\nonterminal{Exp}} {\terminal{in}} {\nonterminal{Exp}}  \\
- & {\delimit}  &{\nonterminal{Exp}} {\terminal{?}} {\nonterminal{Exp}} {\terminal{:}} {\nonterminal{Exp}}  \\
- & {\delimit}  &{\nonterminal{Exp}} {\nonterminal{InfixToken}} {\nonterminal{Exp}}  \\
+ & {\delimit}  &{\nonterminal{Exp2}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Exp2}} & {\arrow}  &{\terminal{if}} {\nonterminal{Exp3}} {\terminal{then}} {\nonterminal{Exp}} {\terminal{else}} {\nonterminal{Exp}}  \\
+ & {\delimit}  &{\nonterminal{Exp3}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Exp3}} & {\arrow}  &{\nonterminal{Exp}} {\nonterminal{InfixToken}} {\nonterminal{Exp}}  \\
+ & {\delimit}  &{\nonterminal{Exp4}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Exp}} & {\arrow}  &{\nonterminal{Exp1}}  \\
 \end{tabular}\\
 
 

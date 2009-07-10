@@ -35,4 +35,8 @@ parser: SPJ/lc.cf
 	alex -g SPJ/LC/Lexlc.x
 	(cd SPJ/LC/; latex Doclc.tex; dvips Doclc.dvi -o Doclc.ps)
 
+pdf: FORCE
+	dvipdf SPJ/LC/Doclc.dvi SPJ/LC/Doclc.pdf
+	okular SPJ/LC/Doclc.pdf
+
 FORCE:

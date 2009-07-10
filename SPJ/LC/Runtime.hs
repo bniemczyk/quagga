@@ -14,4 +14,4 @@ _B f g x = f (g x)
 
 _C f g x = f x g
 
-_S' c f g x = c (f x) (g x)
+_SO c f g x = c (f x) (g x)

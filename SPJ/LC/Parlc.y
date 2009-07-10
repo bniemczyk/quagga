@@ -19,12 +19,13 @@ import SPJ.LC.ErrM
  '(' { PT _ (TS "(") }
  ')' { PT _ (TS ")") }
  '.' { PT _ (TS ".") }
- '?' { PT _ (TS "?") }
- ':' { PT _ (TS ":") }
+ 'else' { PT _ (TS "else") }
+ 'if' { PT _ (TS "if") }
  'in' { PT _ (TS "in") }
  'lambda' { PT _ (TS "lambda") }
  'let' { PT _ (TS "let") }
  'letrec' { PT _ (TS "letrec") }
+ 'then' { PT _ (TS "then") }
 
 L_quoted { PT _ (TL $$) }
 L_integ  { PT _ (TI $$) }
@@ -53,17 +54,38 @@ Stm :: { Stm }
 Stm : Identifier '=' Exp { Equality $1 $3 } 
 
 
-Exp :: { Exp }
-Exp : '(' Exp ')' { PExp $2 } 
+Exp5 :: { Exp }
+Exp5 : '(' Exp ')' { PExp $2 } 
   | String { ConstantStringTerm $1 }
   | Integer { ConstantIntTerm $1 }
   | Identifier { VariableTerm $1 }
-  | Exp Exp { ApplicationTerm $1 $2 }
-  | 'lambda' Identifier '.' Exp { AbstractionTerm $2 $4 }
+  | '(' Exp ')' { $2 }
+
+
+Exp4 :: { Exp }
+Exp4 : Exp Exp5 { ApplicationTerm $1 $2 } 
+  | Exp5 { $1 }
+
+
+Exp1 :: { Exp }
+Exp1 : 'lambda' Identifier '.' Exp { AbstractionTerm $2 $4 } 
   | 'let' Identifier '=' Exp 'in' Exp { LetTerm $2 $4 $6 }
   | 'letrec' Identifier '=' Exp 'in' Exp { LetrecTerm $2 $4 $6 }
-  | Exp '?' Exp ':' Exp { ConditionalTerm $1 $3 $5 }
-  | Exp InfixToken Exp { InfixTerm $1 $2 $3 }
+  | Exp2 { $1 }
+
+
+Exp2 :: { Exp }
+Exp2 : 'if' Exp3 'then' Exp 'else' Exp { ConditionalTerm $2 $4 $6 } 
+  | Exp3 { $1 }
+
+
+Exp3 :: { Exp }
+Exp3 : Exp InfixToken Exp { InfixTerm $1 $2 $3 } 
+  | Exp4 { $1 }
+
+
+Exp :: { Exp }
+Exp : Exp1 { $1 } 
 
 
 

@@ -1,7 +1,7 @@
 entrypoints Program ;
 
-token InfixToken (('-' | '+' | '/' | '=' | '*')+) ;
-token Identifier (letter (letter | digit | '_' | '\'')*) ;
+token InfixToken (('-' | '+' | '/' | '=' | '*' | '<' | '>' | '|' | '&' )+) ;
+token Identifier (letter (letter | digit | '_' )*) ;
 
 comment "#" ;
 
@@ -10,13 +10,15 @@ Prog.				Program ::= [Stm] ;
 terminator Stm ";" ;
 Equality.			Stm ::= Identifier "=" Exp ;
 
-PExp.               Exp ::= "(" Exp ")" ;
-ConstantStringTerm. Exp ::= String ;
-ConstantIntTerm.    Exp ::= Integer ;
-VariableTerm.       Exp ::= Identifier ;
-ApplicationTerm.    Exp ::= Exp Exp ;
-AbstractionTerm.    Exp ::= "lambda" Identifier "." Exp ;
-LetTerm.            Exp ::= "let" Identifier "=" Exp "in" Exp ;
-LetrecTerm.         Exp ::= "letrec" Identifier "=" Exp "in" Exp ;
-ConditionalTerm.    Exp ::= Exp "?" Exp ":" Exp ;
-InfixTerm.          Exp ::= Exp InfixToken Exp ;
+PExp.               Exp5 ::= "(" Exp ")" ;
+ConstantStringTerm. Exp5 ::= String ;
+ConstantIntTerm.    Exp5 ::= Integer ;
+VariableTerm.       Exp5 ::= Identifier ;
+ApplicationTerm.    Exp4 ::= Exp Exp5 ;
+AbstractionTerm.    Exp1 ::= "lambda" Identifier "." Exp ;
+LetTerm.            Exp1 ::= "let" Identifier "=" Exp "in" Exp ;
+LetrecTerm.         Exp1 ::= "letrec" Identifier "=" Exp "in" Exp ;
+ConditionalTerm.    Exp2 ::= "if" Exp3 "then" Exp "else" Exp ;
+InfixTerm.          Exp3 ::= Exp InfixToken Exp ;
+
+coercions Exp 5 ;

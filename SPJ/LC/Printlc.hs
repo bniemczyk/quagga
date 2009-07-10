@@ -102,16 +102,16 @@ instance Print Stm where
 
 instance Print Exp where
   prt i e = case e of
-   PExp exp -> prPrec i 0 (concatD [doc (showString "(") , prt 0 exp , doc (showString ")")])
-   ConstantStringTerm str -> prPrec i 0 (concatD [prt 0 str])
-   ConstantIntTerm n -> prPrec i 0 (concatD [prt 0 n])
-   VariableTerm identifier -> prPrec i 0 (concatD [prt 0 identifier])
-   ApplicationTerm exp0 exp -> prPrec i 0 (concatD [prt 0 exp0 , prt 0 exp])
-   AbstractionTerm identifier exp -> prPrec i 0 (concatD [doc (showString "lambda") , prt 0 identifier , doc (showString ".") , prt 0 exp])
-   LetTerm identifier exp0 exp -> prPrec i 0 (concatD [doc (showString "let") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
-   LetrecTerm identifier exp0 exp -> prPrec i 0 (concatD [doc (showString "letrec") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
-   ConditionalTerm exp0 exp1 exp -> prPrec i 0 (concatD [prt 0 exp0 , doc (showString "?") , prt 0 exp1 , doc (showString ":") , prt 0 exp])
-   InfixTerm exp0 infixtoken exp -> prPrec i 0 (concatD [prt 0 exp0 , prt 0 infixtoken , prt 0 exp])
+   PExp exp -> prPrec i 5 (concatD [doc (showString "(") , prt 0 exp , doc (showString ")")])
+   ConstantStringTerm str -> prPrec i 5 (concatD [prt 0 str])
+   ConstantIntTerm n -> prPrec i 5 (concatD [prt 0 n])
+   VariableTerm identifier -> prPrec i 5 (concatD [prt 0 identifier])
+   ApplicationTerm exp0 exp -> prPrec i 4 (concatD [prt 0 exp0 , prt 5 exp])
+   AbstractionTerm identifier exp -> prPrec i 1 (concatD [doc (showString "lambda") , prt 0 identifier , doc (showString ".") , prt 0 exp])
+   LetTerm identifier exp0 exp -> prPrec i 1 (concatD [doc (showString "let") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
+   LetrecTerm identifier exp0 exp -> prPrec i 1 (concatD [doc (showString "letrec") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
+   ConditionalTerm exp0 exp1 exp -> prPrec i 2 (concatD [doc (showString "if") , prt 3 exp0 , doc (showString "then") , prt 0 exp1 , doc (showString "else") , prt 0 exp])
+   InfixTerm exp0 infixtoken exp -> prPrec i 3 (concatD [prt 0 exp0 , prt 0 infixtoken , prt 0 exp])
 
 
 

@@ -24,21 +24,22 @@ Integer literals //Integer// are nonempty sequences of digits.
 
 
 InfixToken literals are recognized by the regular expression
-`````('-' | '+' | '/' | '=' | '*')+`````
+`````('-' | '+' | '/' | '=' | '*' | '<' | '>' | '|' | '&')+`````
 
 Identifier literals are recognized by the regular expression
-`````letter (letter | digit | '_' | ''')*`````
+`````letter (letter | digit | '_')*`````
 
 
 ===Reserved words and symbols===
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in lc are the following:
-  | ``in`` | ``lambda`` | ``let`` | ``letrec``
+  | ``else`` | ``if`` | ``in`` | ``lambda``
+  | ``let`` | ``letrec`` | ``then`` | 
 
 The symbols used in lc are the following:
   | ; | = | ( | )
-  | . | ? | : | 
+  | . |  |  | 
 
 ===Comments===
 Single-line comments begin with #.There are no multiple-line comments in the grammar.
@@ -53,15 +54,21 @@ All other symbols are terminals.
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// ``;`` //[Stm]// 
   | //Stm// | -> | //Identifier// ``=`` //Exp// 
-  | //Exp// | -> | ``(`` //Exp// ``)`` 
+  | //Exp5// | -> | ``(`` //Exp// ``)`` 
   |  |  **|**  | //String// 
   |  |  **|**  | //Integer// 
   |  |  **|**  | //Identifier// 
-  |  |  **|**  | //Exp// //Exp// 
-  |  |  **|**  | ``lambda`` //Identifier// ``.`` //Exp// 
+  |  |  **|**  | ``(`` //Exp// ``)`` 
+  | //Exp4// | -> | //Exp// //Exp5// 
+  |  |  **|**  | //Exp5// 
+  | //Exp1// | -> | ``lambda`` //Identifier// ``.`` //Exp// 
   |  |  **|**  | ``let`` //Identifier// ``=`` //Exp// ``in`` //Exp// 
   |  |  **|**  | ``letrec`` //Identifier// ``=`` //Exp// ``in`` //Exp// 
-  |  |  **|**  | //Exp// ``?`` //Exp// ``:`` //Exp// 
-  |  |  **|**  | //Exp// //InfixToken// //Exp// 
+  |  |  **|**  | //Exp2// 
+  | //Exp2// | -> | ``if`` //Exp3// ``then`` //Exp// ``else`` //Exp// 
+  |  |  **|**  | //Exp3// 
+  | //Exp3// | -> | //Exp// //InfixToken// //Exp// 
+  |  |  **|**  | //Exp4// 
+  | //Exp// | -> | //Exp1// 
 
 

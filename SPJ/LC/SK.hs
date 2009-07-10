@@ -25,7 +25,7 @@ removeAbstractions exp = optimize $ (walkExp removeAbstractions') exp
         k c = ApplicationTerm (VariableTerm $ Identifier "_K") c
 
 optimize :: Exp -> Exp
-optimize = iterative $ walkExp $ skk_opt . b_opt . c_opt . s_opt
+optimize = iterative . walkExp $ skk_opt . b_opt . c_opt . s_opt . i_opt
 
 skk_opt (ApplicationTerm
     (ApplicationTerm (VariableTerm (Identifier "_S")) (ApplicationTerm (VariableTerm (Identifier "_K")) p))
@@ -51,6 +51,9 @@ s_opt (ApplicationTerm
         (VariableTerm (Identifier "_S")) 
         (ApplicationTerm (ApplicationTerm (VariableTerm (Identifier "_B")) x) y))
         z) = (ApplicationTerm
-                (ApplicationTerm (ApplicationTerm (VariableTerm (Identifier "_S'")) x) y)
+                (ApplicationTerm (ApplicationTerm (VariableTerm (Identifier "_SO")) x) y)
                 z)
 s_opt e = e
+
+i_opt (ApplicationTerm (VariableTerm (Identifier "_I")) x) = x
+i_opt e = e

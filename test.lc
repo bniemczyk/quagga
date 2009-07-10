@@ -1,7 +1,18 @@
 fact = 
-    letrec fact = lambda n . (n == 1) ? 1 : n * fact (n - 1) in fact
-    ;
+    letrec f = lambda n . if n == 1 then 1 else n * f (n - 1) in
+    f ;
+
+pack2 = lambda x .
+            lambda y .
+                lambda f . f x y ;
+
+unpack = lambda f . f ;
+
+mypair = pack2 50 2 ;
+
+mymul = lambda x . lambda y . x * y ;
+
+hundred = unpack mypair mymul ;
 
 main = 
-    putStrLn (show (fact 5))
-    ;
+    putStrLn (show (fact 5 + hundred)) ;

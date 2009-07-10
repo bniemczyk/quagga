@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2009.6.21)  2 JUL 2009 20:35
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2009.6.21)  10 JUL 2009 18:56
 entering extended mode
  %&-line parsing enabled.
 **Doclc.tex
@@ -52,17 +52,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--49
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 50--54
+Underfull \hbox (badness 10000) in paragraph at lines 50--55
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 55--56
+Underfull \hbox (badness 10000) in paragraph at lines 56--57
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 57--62
+Underfull \hbox (badness 10000) in paragraph at lines 58--62
 
  []
 
@@ -89,7 +89,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--84
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 85--97
+Underfull \hbox (badness 10000) in paragraph at lines 85--92
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 93--97
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 98--104
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--109
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 110--114
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--118
 
  []
 
@@ -97,10 +122,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 85--97
 Here is how much of TeX's memory you used:
  245 strings out of 95087
  2613 string characters out of 1183278
- 50111 words of memory out of 1500000
+ 51111 words of memory out of 1500000
  3491 multiletter control sequences out of 10000+50000
  9370 words of font info for 33 fonts, out of 1200000 for 2000
  28 hyphenation exceptions out of 8191
  21i,9n,19p,374b,185s stack positions out of 5000i,500n,6000p,200000b,5000s
 
-Output written on Doclc.dvi (2 pages, 4248 bytes).
+Output written on Doclc.dvi (2 pages, 4764 bytes).

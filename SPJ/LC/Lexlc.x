@@ -16,15 +16,15 @@ $i = [$l $d _ ']          -- identifier character
 $u = [\0-\255]          -- universal: any character
 
 @rsyms =    -- symbols and non-identifier-like reserved words
-   \; | \= | \( | \) | \. | \? | \:
+   \; | \= | \( | \) | \.
 
 :-
 "#" [.]* ; -- Toss single line comments
 
 $white+ ;
 @rsyms { tok (\p s -> PT p (TS $ share s)) }
-(\- | \+ | \/ | \= | \*)+ { tok (\p s -> PT p (eitherResIdent (T_InfixToken . share) s)) }
-$l ($l | $d | \_ | \')* { tok (\p s -> PT p (eitherResIdent (T_Identifier . share) s)) }
+(\- | \+ | \/ | \= | \* | \< | \> | \| | \&)+ { tok (\p s -> PT p (eitherResIdent (T_InfixToken . share) s)) }
+$l ($l | $d | \_)* { tok (\p s -> PT p (eitherResIdent (T_Identifier . share) s)) }
 
 $l $i*   { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
 \" ([$u # [\" \\ \n]] | (\\ (\" | \\ | \' | n | t)))* \"{ tok (\p s -> PT p (TL $ share $ unescapeInitTail s)) }
@@ -84,7 +84,7 @@ eitherResIdent tv s = treeFind resWords
                               | s > a  = treeFind right
                               | s == a = t
 
-resWords = b "let" (b "lambda" (b "in" N N) N) (b "letrec" N N)
+resWords = b "lambda" (b "if" (b "else" N N) (b "in" N N)) (b "letrec" (b "let" N N) (b "then" N N))
    where b s = B s (TS s)
 
 unescapeInitTail :: String -> String
