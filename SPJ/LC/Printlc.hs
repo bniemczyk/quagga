@@ -77,8 +77,13 @@ instance Print Double where
   prt _ x = doc (shows x)
 
 
-instance Print Ident where
-  prt _ (Ident i) = doc (showString i)
+
+instance Print InfixToken where
+  prt _ (InfixToken i) = doc (showString i)
+
+
+instance Print Identifier where
+  prt _ (Identifier i) = doc (showString i)
 
 
 
@@ -89,7 +94,7 @@ instance Print Program where
 
 instance Print Stm where
   prt i e = case e of
-   Equality id exp -> prPrec i 0 (concatD [prt 0 id , doc (showString "=") , prt 0 exp])
+   Equality identifier exp -> prPrec i 0 (concatD [prt 0 identifier , doc (showString "=") , prt 0 exp])
 
   prtList es = case es of
    [] -> (concatD [])
@@ -100,9 +105,13 @@ instance Print Exp where
    PExp exp -> prPrec i 0 (concatD [doc (showString "(") , prt 0 exp , doc (showString ")")])
    ConstantStringTerm str -> prPrec i 0 (concatD [prt 0 str])
    ConstantIntTerm n -> prPrec i 0 (concatD [prt 0 n])
-   VariableTerm id -> prPrec i 0 (concatD [prt 0 id])
+   VariableTerm identifier -> prPrec i 0 (concatD [prt 0 identifier])
    ApplicationTerm exp0 exp -> prPrec i 0 (concatD [prt 0 exp0 , prt 0 exp])
-   AbstractionTerm id exp -> prPrec i 0 (concatD [doc (showString "lambda") , prt 0 id , doc (showString ".") , prt 0 exp])
+   AbstractionTerm identifier exp -> prPrec i 0 (concatD [doc (showString "lambda") , prt 0 identifier , doc (showString ".") , prt 0 exp])
+   LetTerm identifier exp0 exp -> prPrec i 0 (concatD [doc (showString "let") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
+   LetrecTerm identifier exp0 exp -> prPrec i 0 (concatD [doc (showString "letrec") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])
+   ConditionalTerm exp0 exp1 exp -> prPrec i 0 (concatD [prt 0 exp0 , doc (showString "?") , prt 0 exp1 , doc (showString ":") , prt 0 exp])
+   InfixTerm exp0 infixtoken exp -> prPrec i 0 (concatD [prt 0 exp0 , prt 0 infixtoken , prt 0 exp])
 
 
 

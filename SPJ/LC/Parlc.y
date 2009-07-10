@@ -19,19 +19,26 @@ import SPJ.LC.ErrM
  '(' { PT _ (TS "(") }
  ')' { PT _ (TS ")") }
  '.' { PT _ (TS ".") }
+ '?' { PT _ (TS "?") }
+ ':' { PT _ (TS ":") }
+ 'in' { PT _ (TS "in") }
  'lambda' { PT _ (TS "lambda") }
+ 'let' { PT _ (TS "let") }
+ 'letrec' { PT _ (TS "letrec") }
 
-L_ident  { PT _ (TV $$) }
 L_quoted { PT _ (TL $$) }
 L_integ  { PT _ (TI $$) }
+L_InfixToken { PT _ (T_InfixToken $$) }
+L_Identifier { PT _ (T_Identifier $$) }
 L_err    { _ }
 
 
 %%
 
-Ident   :: { Ident }   : L_ident  { Ident $1 }
 String  :: { String }  : L_quoted { $1 }
 Integer :: { Integer } : L_integ  { (read $1) :: Integer }
+InfixToken    :: { InfixToken} : L_InfixToken { InfixToken ($1)}
+Identifier    :: { Identifier} : L_Identifier { Identifier ($1)}
 
 Program :: { Program }
 Program : ListStm { Prog (reverse $1) } 
@@ -43,16 +50,20 @@ ListStm : {- empty -} { [] }
 
 
 Stm :: { Stm }
-Stm : Ident '=' Exp { Equality $1 $3 } 
+Stm : Identifier '=' Exp { Equality $1 $3 } 
 
 
 Exp :: { Exp }
 Exp : '(' Exp ')' { PExp $2 } 
   | String { ConstantStringTerm $1 }
   | Integer { ConstantIntTerm $1 }
-  | Ident { VariableTerm $1 }
+  | Identifier { VariableTerm $1 }
   | Exp Exp { ApplicationTerm $1 $2 }
-  | 'lambda' Ident '.' Exp { AbstractionTerm $2 $4 }
+  | 'lambda' Identifier '.' Exp { AbstractionTerm $2 $4 }
+  | 'let' Identifier '=' Exp 'in' Exp { LetTerm $2 $4 $6 }
+  | 'letrec' Identifier '=' Exp 'in' Exp { LetrecTerm $2 $4 $6 }
+  | Exp '?' Exp ':' Exp { ConditionalTerm $1 $3 $5 }
+  | Exp InfixToken Exp { InfixTerm $1 $2 $3 }
 
 
 

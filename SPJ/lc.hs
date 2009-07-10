@@ -12,6 +12,7 @@ import SPJ.LC.Abslc
 import SPJ.LC.Genhaskell
 
 import SPJ.LC.ErrM
+import SPJ.LC.Simplify
 
 type ParseFun a = [Token] -> Err a
 
@@ -29,9 +30,18 @@ run v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> case genhaskell tree of
+           Ok tree -> case genhaskell (simplifyProg tree) of
                 Ok doc -> putStrLn $ show doc
            -- Err e -> putStrLn e
+
+simplify v p s = let ts = myLLexer s in case p ts of
+           Bad s    -> do putStrLn "\nParse              Failed...\n"
+                          putStrV v "Tokens:"
+                          putStrV v $ show ts
+                          putStrLn s
+           Ok tree -> putStrLn $ printTree (simplifyProg tree)
+           -- Err e -> putStrLn e
+
 
 showTree :: (Show a, Print a) => Int -> a -> IO ()
 showTree v tree
@@ -43,5 +53,6 @@ main :: IO ()
 main = do args <- getArgs
           case args of
             [] -> hGetContents stdin >>= run 2 pProgram
+            ["-ls"] -> hGetContents stdin >>= simplify 2 pProgram
             "-s":fs -> mapM_ (runFile 0 pProgram) fs
             fs -> mapM_ (runFile 2 pProgram) fs

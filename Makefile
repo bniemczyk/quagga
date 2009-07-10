@@ -1,9 +1,11 @@
+CPP=cpp-4.4 -ISPJ/LC/lib
+
 all: build
 
-configure: FORCE
+configure: 
 	runhaskell Setup.hs configure
 
-build: configure FORCE
+build: configure
 	runhaskell Setup.hs build
 
 install: FORCE
@@ -18,9 +20,19 @@ shell: FORCE
 sdist: FORCE
 	runhaskell Setup.hs sdist
 
-test: build FORCE
-	dist/build/lc/lc test.lc |tee test.hs
+test: build
+	$(CPP) test.lc | dist/build/lc/lc | tee test.hs
 	ghc --make test.hs -fglasgow-exts
 	./test
+
+abs: build
+	ghc --make SPJ/LC/Testlc.hs
+	$(CPP) test.lc | SPJ/LC/Testlc
+
+parser: SPJ/lc.cf
+	bnfc -p 'SPJ.LC' SPJ/lc.cf
+	happy -gca SPJ/LC/Parlc.y
+	alex -g SPJ/LC/Lexlc.x
+	(cd SPJ/LC/; latex Doclc.tex; dvips Doclc.dvi -o Doclc.ps)
 
 FORCE:

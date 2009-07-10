@@ -16,12 +16,15 @@ $i = [$l $d _ ']          -- identifier character
 $u = [\0-\255]          -- universal: any character
 
 @rsyms =    -- symbols and non-identifier-like reserved words
-   \; | \= | \( | \) | \.
+   \; | \= | \( | \) | \. | \? | \:
 
 :-
+"#" [.]* ; -- Toss single line comments
 
 $white+ ;
 @rsyms { tok (\p s -> PT p (TS $ share s)) }
+(\- | \+ | \/ | \= | \*)+ { tok (\p s -> PT p (eitherResIdent (T_InfixToken . share) s)) }
+$l ($l | $d | \_ | \')* { tok (\p s -> PT p (eitherResIdent (T_Identifier . share) s)) }
 
 $l $i*   { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
 \" ([$u # [\" \\ \n]] | (\\ (\" | \\ | \' | n | t)))* \"{ tok (\p s -> PT p (TL $ share $ unescapeInitTail s)) }
@@ -43,6 +46,8 @@ data Tok =
  | TV !String     -- identifiers
  | TD !String     -- double precision float literals
  | TC !String     -- character literals
+ | T_InfixToken !String
+ | T_Identifier !String
 
  deriving (Eq,Show,Ord)
 
@@ -64,6 +69,8 @@ prToken t = case t of
   PT _ (TV s) -> s
   PT _ (TD s) -> s
   PT _ (TC s) -> s
+  PT _ (T_InfixToken s) -> s
+  PT _ (T_Identifier s) -> s
 
   _ -> show t
 
@@ -77,7 +84,7 @@ eitherResIdent tv s = treeFind resWords
                               | s > a  = treeFind right
                               | s == a = t
 
-resWords = b "lambda" N N
+resWords = b "let" (b "lambda" (b "in" N N) N) (b "letrec" N N)
    where b s = B s (TS s)
 
 unescapeInitTail :: String -> String

@@ -9,9 +9,14 @@ type Result = Err String
 failure :: Show a => a -> Result
 failure x = Bad $ "Undefined case: " ++ show x
 
-transIdent :: Ident -> Result
-transIdent x = case x of
-  Ident str  -> failure x
+transInfixToken :: InfixToken -> Result
+transInfixToken x = case x of
+  InfixToken str  -> failure x
+
+
+transIdentifier :: Identifier -> Result
+transIdentifier x = case x of
+  Identifier str  -> failure x
 
 
 transProgram :: Program -> Result
@@ -21,7 +26,7 @@ transProgram x = case x of
 
 transStm :: Stm -> Result
 transStm x = case x of
-  Equality id exp  -> failure x
+  Equality identifier exp  -> failure x
 
 
 transExp :: Exp -> Result
@@ -29,9 +34,13 @@ transExp x = case x of
   PExp exp  -> failure x
   ConstantStringTerm str  -> failure x
   ConstantIntTerm n  -> failure x
-  VariableTerm id  -> failure x
+  VariableTerm identifier  -> failure x
   ApplicationTerm exp0 exp  -> failure x
-  AbstractionTerm id exp  -> failure x
+  AbstractionTerm identifier exp  -> failure x
+  LetTerm identifier exp0 exp  -> failure x
+  LetrecTerm identifier exp0 exp  -> failure x
+  ConditionalTerm exp0 exp1 exp  -> failure x
+  InfixTerm exp0 infixtoken exp  -> failure x
 
 
 

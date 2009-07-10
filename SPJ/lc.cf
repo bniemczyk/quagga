@@ -1,13 +1,22 @@
 entrypoints Program ;
 
+token InfixToken (('-' | '+' | '/' | '=' | '*')+) ;
+token Identifier (letter (letter | digit | '_' | '\'')*) ;
+
+comment "#" ;
+
 Prog.				Program ::= [Stm] ;
 
 terminator Stm ";" ;
-Equality.			Stm ::= Ident "=" Exp ;
+Equality.			Stm ::= Identifier "=" Exp ;
 
 PExp.               Exp ::= "(" Exp ")" ;
 ConstantStringTerm. Exp ::= String ;
 ConstantIntTerm.    Exp ::= Integer ;
-VariableTerm.       Exp ::= Ident ;
+VariableTerm.       Exp ::= Identifier ;
 ApplicationTerm.    Exp ::= Exp Exp ;
-AbstractionTerm.    Exp ::= "lambda" Ident "." Exp ;
+AbstractionTerm.    Exp ::= "lambda" Identifier "." Exp ;
+LetTerm.            Exp ::= "let" Identifier "=" Exp "in" Exp ;
+LetrecTerm.         Exp ::= "letrec" Identifier "=" Exp "in" Exp ;
+ConditionalTerm.    Exp ::= Exp "?" Exp ":" Exp ;
+InfixTerm.          Exp ::= Exp InfixToken Exp ;
