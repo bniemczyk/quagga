@@ -29,15 +29,28 @@ transStm x = case x of
   Equality identifier exp  -> failure x
 
 
+transUntupleItem :: UntupleItem -> Result
+transUntupleItem x = case x of
+  UntupleVar identifier  -> failure x
+  UntupleTuple untuple  -> failure x
+
+
+transUntuple :: Untuple -> Result
+transUntuple x = case x of
+  UntupleTerm untupleitems  -> failure x
+
+
 transExp :: Exp -> Result
 transExp x = case x of
   PExp exp  -> failure x
+  TupleTerm exps  -> failure x
   ConstantStringTerm str  -> failure x
   ConstantIntTerm n  -> failure x
   VariableTerm identifier  -> failure x
   ApplicationTerm exp0 exp  -> failure x
-  AbstractionTerm identifier exp  -> failure x
+  AbstractionTerm identifiers exp  -> failure x
   LetTerm identifier exp0 exp  -> failure x
+  LetUntupleTerm untuple exp0 exp  -> failure x
   LetrecTerm identifier exp0 exp  -> failure x
   ConditionalTerm exp0 exp1 exp  -> failure x
   InfixTerm exp0 infixtoken exp  -> failure x

@@ -38,8 +38,8 @@ The reserved words used in lc are the following:
   | ``let`` | ``letrec`` | ``then`` | 
 
 The symbols used in lc are the following:
-  | ; | = | ( | )
-  | . |  |  | 
+  | ; | , | = | {
+  | } | ( | ) | .
 
 ===Comments===
 Single-line comments begin with #.There are no multiple-line comments in the grammar.
@@ -53,19 +53,32 @@ All other symbols are terminals.
   | //Program// | -> | //[Stm]// 
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// ``;`` //[Stm]// 
+  | //[Exp]// | -> | **eps**
+  |  |  **|**  | //Exp// 
+  |  |  **|**  | //Exp// ``,`` //[Exp]// 
+  | //[UntupleItem]// | -> | **eps**
+  |  |  **|**  | //UntupleItem// 
+  |  |  **|**  | //UntupleItem// ``,`` //[UntupleItem]// 
+  | //[Identifier]// | -> | **eps**
+  |  |  **|**  | //Identifier// //[Identifier]// 
   | //Stm// | -> | //Identifier// ``=`` //Exp// 
+  | //UntupleItem// | -> | //Identifier// 
+  |  |  **|**  | //Untuple// 
+  | //Untuple// | -> | ``{`` //[UntupleItem]// ``}`` 
   | //Exp5// | -> | ``(`` //Exp// ``)`` 
+  |  |  **|**  | ``{`` //[Exp]// ``}`` 
   |  |  **|**  | //String// 
   |  |  **|**  | //Integer// 
   |  |  **|**  | //Identifier// 
   |  |  **|**  | ``(`` //Exp// ``)`` 
   | //Exp4// | -> | //Exp// //Exp5// 
   |  |  **|**  | //Exp5// 
-  | //Exp1// | -> | ``lambda`` //Identifier// ``.`` //Exp// 
+  | //Exp1// | -> | ``lambda`` //[Identifier]// ``.`` //Exp// 
   |  |  **|**  | ``let`` //Identifier// ``=`` //Exp// ``in`` //Exp// 
+  |  |  **|**  | ``let`` //Untuple// ``=`` //Exp// ``in`` //Exp// 
   |  |  **|**  | ``letrec`` //Identifier// ``=`` //Exp// ``in`` //Exp// 
   |  |  **|**  | //Exp2// 
-  | //Exp2// | -> | ``if`` //Exp3// ``then`` //Exp// ``else`` //Exp// 
+  | //Exp2// | -> | ``if`` //Exp// ``then`` //Exp// ``else`` //Exp// 
   |  |  **|**  | //Exp3// 
   | //Exp3// | -> | //Exp// //InfixToken// //Exp// 
   |  |  **|**  | //Exp4// 

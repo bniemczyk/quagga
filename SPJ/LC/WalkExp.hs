@@ -13,6 +13,8 @@ walkExp fn exp =
         LetrecTerm id e1 e2 -> fn $ LetrecTerm id (walk e1) (walk e2)
         InfixTerm e1 iftkn e2 -> fn $ InfixTerm (walk e1) iftkn (walk e2)
         ConditionalTerm e1 e2 e3 -> fn $ ConditionalTerm (walk e1) (walk e2) (walk e3)
+        TupleTerm es -> fn $ TupleTerm (map walk es)
+        LetUntupleTerm tup e1 e2 -> fn $ LetUntupleTerm tup (walk e1) (walk e2)
         exp -> fn exp
 
 iterative :: Eq a => (a -> a) -> a -> a

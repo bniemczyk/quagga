@@ -15,7 +15,10 @@ import SPJ.LC.ErrM
 
 %token 
  ';' { PT _ (TS ";") }
+ ',' { PT _ (TS ",") }
  '=' { PT _ (TS "=") }
+ '{' { PT _ (TS "{") }
+ '}' { PT _ (TS "}") }
  '(' { PT _ (TS "(") }
  ')' { PT _ (TS ")") }
  '.' { PT _ (TS ".") }
@@ -50,12 +53,39 @@ ListStm : {- empty -} { [] }
   | ListStm Stm ';' { flip (:) $1 $2 }
 
 
+ListExp :: { [Exp] }
+ListExp : {- empty -} { [] } 
+  | Exp { (:[]) $1 }
+  | Exp ',' ListExp { (:) $1 $3 }
+
+
+ListUntupleItem :: { [UntupleItem] }
+ListUntupleItem : {- empty -} { [] } 
+  | UntupleItem { (:[]) $1 }
+  | UntupleItem ',' ListUntupleItem { (:) $1 $3 }
+
+
+ListIdentifier :: { [Identifier] }
+ListIdentifier : {- empty -} { [] } 
+  | ListIdentifier Identifier { flip (:) $1 $2 }
+
+
 Stm :: { Stm }
 Stm : Identifier '=' Exp { Equality $1 $3 } 
 
 
+UntupleItem :: { UntupleItem }
+UntupleItem : Identifier { UntupleVar $1 } 
+  | Untuple { UntupleTuple $1 }
+
+
+Untuple :: { Untuple }
+Untuple : '{' ListUntupleItem '}' { UntupleTerm $2 } 
+
+
 Exp5 :: { Exp }
 Exp5 : '(' Exp ')' { PExp $2 } 
+  | '{' ListExp '}' { TupleTerm $2 }
   | String { ConstantStringTerm $1 }
   | Integer { ConstantIntTerm $1 }
   | Identifier { VariableTerm $1 }
@@ -68,14 +98,15 @@ Exp4 : Exp Exp5 { ApplicationTerm $1 $2 }
 
 
 Exp1 :: { Exp }
-Exp1 : 'lambda' Identifier '.' Exp { AbstractionTerm $2 $4 } 
+Exp1 : 'lambda' ListIdentifier '.' Exp { AbstractionTerm (reverse $2) $4 } 
   | 'let' Identifier '=' Exp 'in' Exp { LetTerm $2 $4 $6 }
+  | 'let' Untuple '=' Exp 'in' Exp { LetUntupleTerm $2 $4 $6 }
   | 'letrec' Identifier '=' Exp 'in' Exp { LetrecTerm $2 $4 $6 }
   | Exp2 { $1 }
 
 
 Exp2 :: { Exp }
-Exp2 : 'if' Exp3 'then' Exp 'else' Exp { ConditionalTerm $2 $4 $6 } 
+Exp2 : 'if' Exp 'then' Exp 'else' Exp { ConditionalTerm $2 $4 $6 } 
   | Exp3 { $1 }
 
 

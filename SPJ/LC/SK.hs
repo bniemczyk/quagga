@@ -6,8 +6,8 @@ import SPJ.LC.WalkExp
 removeAbstractions :: Exp -> Exp
 removeAbstractions exp = optimize $ (walkExp removeAbstractions') exp
     where
-        removeAbstractions' (AbstractionTerm id body) = case body of
-            ApplicationTerm e1 e2 -> s id e1 e2
+        removeAbstractions' (AbstractionTerm (id:[]) body) = case body of
+            ApplicationTerm e1 e2 -> s [id] e1 e2
             VariableTerm v -> if v == id 
                 then i
                 else k $ VariableTerm v

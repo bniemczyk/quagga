@@ -37,6 +37,6 @@ parser: SPJ/lc.cf
 
 pdf: FORCE
 	dvipdf SPJ/LC/Doclc.dvi SPJ/LC/Doclc.pdf
-	okular SPJ/LC/Doclc.pdf
+	okular SPJ/LC/Doclc.pdf 2> /dev/null
 
 FORCE:

@@ -2,17 +2,11 @@ fact =
     letrec f = lambda n . if n == 1 then 1 else n * f (n - 1) in
     f ;
 
-pack2 = lambda x .
-            lambda y .
-                lambda f . f x y ;
+trip = lambda a b c . { a, b, c } ;
 
-unpack = lambda f . f ;
-
-mypair = pack2 50 2 ;
-
-mymul = lambda x . lambda y . x * y ;
-
-hundred = unpack mypair mymul ;
+hundred = 
+    let { x, y, z } = trip 2 40 20 in 
+    (x * y) + z ;
 
 main = 
     putStrLn (show (fact 5 + hundred)) ;

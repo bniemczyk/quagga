@@ -8,17 +8,27 @@ comment "#" ;
 Prog.				Program ::= [Stm] ;
 
 terminator Stm ";" ;
+separator Exp "," ;
+separator UntupleItem "," ;
+separator Identifier "" ;
+
 Equality.			Stm ::= Identifier "=" Exp ;
 
+UntupleVar.         UntupleItem ::= Identifier ;
+UntupleTuple.       UntupleItem ::= Untuple ;
+UntupleTerm.        Untuple     ::= "{" [UntupleItem] "}" ;
+
 PExp.               Exp5 ::= "(" Exp ")" ;
+TupleTerm.          Exp5 ::= "{" [Exp] "}" ;
 ConstantStringTerm. Exp5 ::= String ;
 ConstantIntTerm.    Exp5 ::= Integer ;
 VariableTerm.       Exp5 ::= Identifier ;
 ApplicationTerm.    Exp4 ::= Exp Exp5 ;
-AbstractionTerm.    Exp1 ::= "lambda" Identifier "." Exp ;
+AbstractionTerm.    Exp1 ::= "lambda" [Identifier] "." Exp ;
 LetTerm.            Exp1 ::= "let" Identifier "=" Exp "in" Exp ;
+LetUntupleTerm.     Exp1 ::= "let" Untuple "=" Exp "in" Exp ;
 LetrecTerm.         Exp1 ::= "letrec" Identifier "=" Exp "in" Exp ;
-ConditionalTerm.    Exp2 ::= "if" Exp3 "then" Exp "else" Exp ;
+ConditionalTerm.    Exp2 ::= "if" Exp "then" Exp "else" Exp ;
 InfixTerm.          Exp3 ::= Exp InfixToken Exp ;
 
 coercions Exp 5 ;

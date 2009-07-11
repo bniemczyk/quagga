@@ -25,7 +25,7 @@ transExp x = do
         exp0r <- transExp exp0
         exp1r <- transExp exp
         return $ exp0r <+> exp1r
-      AbstractionTerm id exp  -> do
+      AbstractionTerm (id:[]) exp  -> do
         expr <- transExp exp
         idr <- transIdentifier id
         return $ (text "\\") <> idr <+> (text "->") $$ expr

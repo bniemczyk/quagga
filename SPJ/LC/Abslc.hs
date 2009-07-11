@@ -12,14 +12,25 @@ data Stm =
    Equality Identifier Exp
   deriving (Eq,Ord,Show)
 
+data UntupleItem =
+   UntupleVar Identifier
+ | UntupleTuple Untuple
+  deriving (Eq,Ord,Show)
+
+data Untuple =
+   UntupleTerm [UntupleItem]
+  deriving (Eq,Ord,Show)
+
 data Exp =
    PExp Exp
+ | TupleTerm [Exp]
  | ConstantStringTerm String
  | ConstantIntTerm Integer
  | VariableTerm Identifier
  | ApplicationTerm Exp Exp
- | AbstractionTerm Identifier Exp
+ | AbstractionTerm [Identifier] Exp
  | LetTerm Identifier Exp Exp
+ | LetUntupleTerm Untuple Exp Exp
  | LetrecTerm Identifier Exp Exp
  | ConditionalTerm Exp Exp Exp
  | InfixTerm Exp InfixToken Exp

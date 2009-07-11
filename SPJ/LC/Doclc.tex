@@ -56,7 +56,8 @@ The reserved words used in lc are the following: \\
 The symbols used in lc are the following: \\
 
 \begin{tabular}{lll}
-{\symb{;}} &{\symb{{$=$}}} &{\symb{(}} \\
+{\symb{;}} &{\symb{,}} &{\symb{{$=$}}} \\
+{\symb{\{}} &{\symb{\}}} &{\symb{(}} \\
 {\symb{)}} &{\symb{.}} & \\
 \end{tabular}\\
 
@@ -79,11 +80,38 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
+{\nonterminal{ListExp}} & {\arrow}  &{\emptyP} \\
+ & {\delimit}  &{\nonterminal{Exp}}  \\
+ & {\delimit}  &{\nonterminal{Exp}} {\terminal{,}} {\nonterminal{ListExp}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{ListUntupleItem}} & {\arrow}  &{\emptyP} \\
+ & {\delimit}  &{\nonterminal{UntupleItem}}  \\
+ & {\delimit}  &{\nonterminal{UntupleItem}} {\terminal{,}} {\nonterminal{ListUntupleItem}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{ListIdentifier}} & {\arrow}  &{\emptyP} \\
+ & {\delimit}  &{\nonterminal{Identifier}} {\nonterminal{ListIdentifier}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
 {\nonterminal{Stm}} & {\arrow}  &{\nonterminal{Identifier}} {\terminal{{$=$}}} {\nonterminal{Exp}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
+{\nonterminal{UntupleItem}} & {\arrow}  &{\nonterminal{Identifier}}  \\
+ & {\delimit}  &{\nonterminal{Untuple}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
+{\nonterminal{Untuple}} & {\arrow}  &{\terminal{\{}} {\nonterminal{ListUntupleItem}} {\terminal{\}}}  \\
+\end{tabular}\\
+
+\begin{tabular}{lll}
 {\nonterminal{Exp5}} & {\arrow}  &{\terminal{(}} {\nonterminal{Exp}} {\terminal{)}}  \\
+ & {\delimit}  &{\terminal{\{}} {\nonterminal{ListExp}} {\terminal{\}}}  \\
  & {\delimit}  &{\nonterminal{String}}  \\
  & {\delimit}  &{\nonterminal{Integer}}  \\
  & {\delimit}  &{\nonterminal{Identifier}}  \\
@@ -96,14 +124,15 @@ All other symbols are terminals.\\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Exp1}} & {\arrow}  &{\terminal{lambda}} {\nonterminal{Identifier}} {\terminal{.}} {\nonterminal{Exp}}  \\
+{\nonterminal{Exp1}} & {\arrow}  &{\terminal{lambda}} {\nonterminal{ListIdentifier}} {\terminal{.}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\terminal{let}} {\nonterminal{Identifier}} {\terminal{{$=$}}} {\nonterminal{Exp}} {\terminal{in}} {\nonterminal{Exp}}  \\
+ & {\delimit}  &{\terminal{let}} {\nonterminal{Untuple}} {\terminal{{$=$}}} {\nonterminal{Exp}} {\terminal{in}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\terminal{letrec}} {\nonterminal{Identifier}} {\terminal{{$=$}}} {\nonterminal{Exp}} {\terminal{in}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\nonterminal{Exp2}}  \\
 \end{tabular}\\
 
 \begin{tabular}{lll}
-{\nonterminal{Exp2}} & {\arrow}  &{\terminal{if}} {\nonterminal{Exp3}} {\terminal{then}} {\nonterminal{Exp}} {\terminal{else}} {\nonterminal{Exp}}  \\
+{\nonterminal{Exp2}} & {\arrow}  &{\terminal{if}} {\nonterminal{Exp}} {\terminal{then}} {\nonterminal{Exp}} {\terminal{else}} {\nonterminal{Exp}}  \\
  & {\delimit}  &{\nonterminal{Exp3}}  \\
 \end{tabular}\\
 

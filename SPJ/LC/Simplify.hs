@@ -6,24 +6,28 @@ import SPJ.LC.Infix
 import SPJ.LC.SK
 import SPJ.LC.Conditionals
 import SPJ.LC.WalkExp
+import SPJ.LC.Tuple
+import SPJ.LC.Curry
 
 simplifyExp = 
-        removeAbstractions . 
+        -- removeAbstractions . 
         (iterative . walkExp $ reduce) .
         transformInfixOps . 
         transformLets . 
         transformConditionals . 
+        packTuples . unpackTuples .
+        curryExps .
         (iterative . walkExp $ removeParens)
     where
         removeParens (PExp e) = e
         removeParens e = e
-        reduce (ApplicationTerm (AbstractionTerm (Identifier id) body) arg) = reduce' id body arg
+        reduce (ApplicationTerm (AbstractionTerm [(Identifier id)] body) arg) = reduce' id body arg
         reduce e = e
         reduce' id body arg = case body of
             VariableTerm (Identifier id') -> if id' == id then arg else VariableTerm $ Identifier id'
-            AbstractionTerm (Identifier id') abstraction -> if id' == id
-                then AbstractionTerm (Identifier id') abstraction
-                else AbstractionTerm (Identifier id') $ reduce' id abstraction arg
+            AbstractionTerm [(Identifier id')] abstraction -> if id' == id
+                then AbstractionTerm [(Identifier id')] abstraction
+                else AbstractionTerm [(Identifier id')] $ reduce' id abstraction arg
             ApplicationTerm p q -> ApplicationTerm (reduce' id p arg) (reduce' id q arg)
             e -> e
 
