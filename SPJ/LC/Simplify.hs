@@ -10,14 +10,31 @@ import SPJ.LC.Tuple
 import SPJ.LC.Curry
 
 simplifyExp = 
+        -- convert all expressions to nothing but applications of a fixed set of combinators
+        -- this should run last (and may be skipped while debugging, because it makes the
+        -- output hard to understand)
         -- removeAbstractions . 
+
+        -- beta reduction
         (iterative . walkExp $ reduce) .
+
+        -- infix operations changed to prefix function applications
         transformInfixOps . 
+
+        -- remove lets
         transformLets . 
+
+        -- turn if then else into code using the _IF combinator
         transformConditionals . 
+
+        -- translates { foo, bar } into simple lambda calculus
         packTuples . unpackTuples .
+
+        -- change all multi-variable functions into curried single-var functions
         curryExps .
-        (iterative . walkExp $ removeParens)
+
+        -- after it's been parsed, the parenthesis are useless
+        (walkExp $ removeParens)
     where
         removeParens (PExp e) = e
         removeParens e = e

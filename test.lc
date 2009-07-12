@@ -5,8 +5,12 @@ fact =
 trip = lambda a b c . { a, b, c } ;
 
 hundred = 
-    let { x, y, z } = trip 2 40 20 in 
+    let { x, y, z } = trip (2 * 20) 40 20 in 
     (x * y) + z ;
 
+sqr = lambda n . n * n ;
+
+twenty_five = let sqr = lambda n . n * n in sqr 5 ;
+
 main = 
-    putStrLn (show (fact 5 + hundred)) ;
+    putStrLn (show (fact (sqr 2) + hundred)) ;

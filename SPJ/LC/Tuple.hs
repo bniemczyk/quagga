@@ -8,6 +8,7 @@ packTuples e = walkExp packTuples' e
     where
         packTuples' (TupleTerm terms) = pack terms
         packTuples' e = e
+        pack es = AbstractionTerm [unp] $ foldl ApplicationTerm (VariableTerm unp) es
 
 unpackTuples :: Exp -> Exp
 unpackTuples e = walkExp unpackTuples' e
@@ -18,13 +19,5 @@ unpackTuples e = walkExp unpackTuples' e
         unpackTuples' e = e
         unpack [(UntupleVar id)] e = AbstractionTerm [id] e
         unpack ((UntupleVar id) : rest) e = AbstractionTerm [id] (unpack rest e)
-
-pack :: [Exp] -> Exp
-pack [e] = AbstractionTerm [unp] (ApplicationTerm (VariableTerm unp) e)
-pack (e:es) = 
-        let AbstractionTerm [(Identifier "_unpack")] (ApplicationTerm aterm innerBody) = pack es in
-        AbstractionTerm
-            [unp]
-            (ApplicationTerm (ApplicationTerm aterm e) innerBody)
 
 unp = Identifier "_unpack"
