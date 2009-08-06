@@ -22,12 +22,12 @@ Executable extjs-gen
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp
 
-Executable lch
-    Main-Is: Quagga/lch.hs
+Executable qlch
+    Main-Is: Quagga/qlch.hs
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary
 
-Executable lcc
-    Main-Is: Quagga/lcc.hs
+Executable qlcc
+    Main-Is: Quagga/qlcc.hs
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring
