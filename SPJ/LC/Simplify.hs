@@ -9,13 +9,14 @@ import SPJ.LC.WalkExp
 import SPJ.LC.Tuple
 import SPJ.LC.Curry
 
-simplifyExp = 
+simplifyExp = walkExp . iterative $
         -- convert all expressions to nothing but applications of a fixed set of combinators
         -- this should run last (and may be skipped while debugging, because it makes the
         -- output hard to understand)
-        -- removeAbstractions . 
+        removeAbstractions . 
 
-        -- beta reduction
+        -- beta reduction, but only reductions that are safe and don't stop
+        -- us from being fully lazy
         (iterative . walkExp $ reduce) .
 
         -- infix operations changed to prefix function applications
@@ -38,15 +39,20 @@ simplifyExp =
     where
         removeParens (PExp e) = e
         removeParens e = e
-        reduce (ApplicationTerm (AbstractionTerm [(Identifier id)] body) arg) = reduce' id body arg
+        reduce 
+            (ApplicationTerm 
+                (ApplicationTerm 
+                    (VariableTerm (Identifier id)) 
+                    (ConstantIntTerm i1)) 
+                (ConstantIntTerm i2)) = case id of
+                    "*" -> ConstantIntTerm $ i1 * i2
+                    "/" -> ConstantIntTerm $ i1 `div` i2
+                    "+" -> ConstantIntTerm $ i1 + i2
+                    "-" -> ConstantIntTerm $ i1 - i2
+                    id -> ApplicationTerm 
+                        (ApplicationTerm (VariableTerm $ Identifier id) (ConstantIntTerm i1)) 
+                        (ConstantIntTerm i2)
         reduce e = e
-        reduce' id body arg = case body of
-            VariableTerm (Identifier id') -> if id' == id then arg else VariableTerm $ Identifier id'
-            AbstractionTerm [(Identifier id')] abstraction -> if id' == id
-                then AbstractionTerm [(Identifier id')] abstraction
-                else AbstractionTerm [(Identifier id')] $ reduce' id abstraction arg
-            ApplicationTerm p q -> ApplicationTerm (reduce' id p arg) (reduce' id q arg)
-            e -> e
 
 simplifyStmt (Equality id e) = Equality id $ simplifyExp e
 

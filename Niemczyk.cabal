@@ -8,9 +8,9 @@ License-File:   LICENSE
 
 Library
     Build-Depends:		base
-    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Parser Guic.CommonTarget
+    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Parser Guic.CommonTarget 
     other-modules:      Util 
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package binary
 
 Executable csv2sql
     Main-Is: csv2sql.hs
@@ -22,7 +22,12 @@ Executable extjs-gen
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp
 
-Executable lc
-    Main-Is: SPJ/lc.hs
+Executable lch
+    Main-Is: SPJ/lch.hs
     Build-Depends: base
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary
+
+Executable lcc
+    Main-Is: SPJ/lcc.hs
+    Build-Depends: base
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring

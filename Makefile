@@ -20,8 +20,9 @@ shell: FORCE
 sdist: FORCE
 	runhaskell Setup.hs sdist
 
-test: build
-	$(CPP) test.lc | dist/build/lc/lc | tee test.hs
+test: test.lc FORCE
+	# $(CPP) test.lc | dist/build/lcc/lcc > test.lcb
+	$(CPP) test.lc | dist/build/lch/lch | tee test.hs
 	ghc --make test.hs -fglasgow-exts
 	./test
 
