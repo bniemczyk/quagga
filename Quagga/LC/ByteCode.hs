@@ -1,8 +1,8 @@
-module SPJ.LC.ByteCode (encode, decode) where
+module Quagga.LC.ByteCode (encode, decode) where
 
 import Control.Monad
 import Data.Binary
-import SPJ.LC.Abslc
+import Quagga.LC.Abslc
 
 instance Binary Exp where
     put (ConstantStringTerm s) = put (1 :: Word8) >> put s

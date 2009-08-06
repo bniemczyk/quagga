@@ -1,6 +1,6 @@
-module SPJ.LC.WalkExp (walkExp, iterative) where
+module Quagga.LC.WalkExp (walkExp, iterative) where
 
-import SPJ.LC.Abslc
+import Quagga.LC.Abslc
 
 walkExp :: (Exp -> Exp) -> Exp -> Exp
 walkExp fn exp = 

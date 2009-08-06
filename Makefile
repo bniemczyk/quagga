@@ -1,4 +1,4 @@
-CPP=cpp-4.4 -ISPJ/LC/lib
+CPP=cpp-4.4 -IQuagga/LC/lib
 
 all: build
 
@@ -27,17 +27,17 @@ test: test.lc FORCE
 	./test
 
 abs: build
-	ghc --make SPJ/LC/Testlc.hs
-	$(CPP) test.lc | SPJ/LC/Testlc
+	ghc --make Quagga/LC/Testlc.hs
+	$(CPP) test.lc | Quagga/LC/Testlc
 
-parser: SPJ/lc.cf
-	bnfc -p 'SPJ.LC' SPJ/lc.cf
-	happy -gca SPJ/LC/Parlc.y
-	alex -g SPJ/LC/Lexlc.x
-	(cd SPJ/LC/; latex Doclc.tex; dvips Doclc.dvi -o Doclc.ps)
+parser: Quagga/lc.cf
+	bnfc -p 'Quagga.LC' Quagga/lc.cf
+	happy -gca Quagga/LC/Parlc.y
+	alex -g Quagga/LC/Lexlc.x
+	(cd Quagga/LC/; latex Doclc.tex; dvips Doclc.dvi -o Doclc.ps)
 
 pdf: FORCE
-	dvipdf SPJ/LC/Doclc.dvi SPJ/LC/Doclc.pdf
-	okular SPJ/LC/Doclc.pdf 2> /dev/null
+	dvipdf Quagga/LC/Doclc.dvi Quagga/LC/Doclc.pdf
+	okular Quagga/LC/Doclc.pdf 2> /dev/null
 
 FORCE:

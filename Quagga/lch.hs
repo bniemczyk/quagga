@@ -5,14 +5,14 @@ module Main where
 import IO ( stdin, hGetContents )
 import System ( getArgs, getProgName )
 
-import SPJ.LC.Lexlc
-import SPJ.LC.Parlc
-import SPJ.LC.Printlc
-import SPJ.LC.Abslc
-import SPJ.LC.Genhaskell
+import Quagga.LC.Lexlc
+import Quagga.LC.Parlc
+import Quagga.LC.Printlc
+import Quagga.LC.Abslc
+import Quagga.LC.Genhaskell
 
-import SPJ.LC.ErrM
-import SPJ.LC.Simplify
+import Quagga.LC.ErrM
+import Quagga.LC.Simplify
 
 type ParseFun a = [Token] -> Err a
 

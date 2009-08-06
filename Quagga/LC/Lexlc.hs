@@ -1,8 +1,8 @@
 {-# OPTIONS -fglasgow-exts -cpp #-}
-{-# LINE 3 "SPJ/LC/Lexlc.x" #-}
+{-# LINE 3 "Quagga/LC/Lexlc.x" #-}
 
 {-# OPTIONS -fno-warn-incomplete-patterns #-}
-module SPJ.LC.Lexlc where
+module Quagga.LC.Lexlc where
 
 
 
@@ -37,7 +37,7 @@ alex_deflt :: AlexAddr
 alex_deflt = AlexA# "\x08\x00\xff\xff\x03\x00\x03\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x0d\x00\x0d\x00\xff\xff\xff\xff"#
 
 alex_accept = listArray (0::Int,15) [[],[],[(AlexAccSkip)],[(AlexAccSkip)],[(AlexAccSkip)],[(AlexAcc (alex_action_2))],[(AlexAcc (alex_action_2))],[(AlexAcc (alex_action_3))],[(AlexAcc (alex_action_4))],[(AlexAcc (alex_action_4))],[(AlexAcc (alex_action_5))],[(AlexAcc (alex_action_6))],[],[],[],[(AlexAcc (alex_action_7))]]
-{-# LINE 35 "SPJ/LC/Lexlc.x" #-}
+{-# LINE 35 "Quagga/LC/Lexlc.x" #-}
 
 
 tok f p s = f p s

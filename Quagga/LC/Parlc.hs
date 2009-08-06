@@ -1,9 +1,9 @@
 {-# OPTIONS -fglasgow-exts -cpp #-}
 {-# OPTIONS -fno-warn-incomplete-patterns -fno-warn-overlapping-patterns #-}
-module SPJ.LC.Parlc where
-import SPJ.LC.Abslc
-import SPJ.LC.Lexlc
-import SPJ.LC.ErrM
+module Quagga.LC.Parlc where
+import Quagga.LC.Abslc
+import Quagga.LC.Lexlc
+import Quagga.LC.ErrM
 #if __GLASGOW_HASKELL__ >= 503
 import Data.Array
 #else

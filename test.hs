@@ -1,4 +1,4 @@
-import SPJ.LC.Runtime
+import Quagga.LC.Runtime
 
 
 fact =

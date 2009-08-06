@@ -1,7 +1,7 @@
-module SPJ.LC.SK (removeAbstractions) where
+module Quagga.LC.SK (removeAbstractions) where
 
-import SPJ.LC.Abslc
-import SPJ.LC.WalkExp
+import Quagga.LC.Abslc
+import Quagga.LC.WalkExp
 
 removeAbstractions :: Exp -> Exp
 removeAbstractions exp = optimize $ (walkExp removeAbstractions') exp

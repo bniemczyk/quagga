@@ -1,7 +1,7 @@
-module SPJ.LC.Let (transformLets) where
+module Quagga.LC.Let (transformLets) where
 
-import SPJ.LC.Abslc
-import SPJ.LC.WalkExp
+import Quagga.LC.Abslc
+import Quagga.LC.WalkExp
 
 transformLets :: Exp -> Exp
 transformLets exp = walkExp transformLets' exp

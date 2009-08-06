@@ -1,13 +1,13 @@
-module SPJ.LC.Simplify where
+module Quagga.LC.Simplify where
 
-import SPJ.LC.Let
-import SPJ.LC.Abslc
-import SPJ.LC.Infix
-import SPJ.LC.SK
-import SPJ.LC.Conditionals
-import SPJ.LC.WalkExp
-import SPJ.LC.Tuple
-import SPJ.LC.Curry
+import Quagga.LC.Let
+import Quagga.LC.Abslc
+import Quagga.LC.Infix
+import Quagga.LC.SK
+import Quagga.LC.Conditionals
+import Quagga.LC.WalkExp
+import Quagga.LC.Tuple
+import Quagga.LC.Curry
 
 simplifyExp = walkExp . iterative $
         -- convert all expressions to nothing but applications of a fixed set of combinators

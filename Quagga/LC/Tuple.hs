@@ -1,7 +1,7 @@
-module SPJ.LC.Tuple (packTuples, unpackTuples) where
+module Quagga.LC.Tuple (packTuples, unpackTuples) where
 
-import SPJ.LC.WalkExp
-import SPJ.LC.Abslc
+import Quagga.LC.WalkExp
+import Quagga.LC.Abslc
 
 packTuples :: Exp -> Exp
 packTuples e = walkExp packTuples' e

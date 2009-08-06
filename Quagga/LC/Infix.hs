@@ -1,7 +1,7 @@
-module SPJ.LC.Infix where
+module Quagga.LC.Infix where
 
-import SPJ.LC.Abslc
-import SPJ.LC.WalkExp
+import Quagga.LC.Abslc
+import Quagga.LC.WalkExp
 
 transformInfixOps :: Exp -> Exp
 transformInfixOps exp = walkExp transformInfixOps' exp

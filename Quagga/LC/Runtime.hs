@@ -1,4 +1,4 @@
-module SPJ.LC.Runtime where
+module Quagga.LC.Runtime where
 
 _Y h = h (_Y h)
 

@@ -1,7 +1,7 @@
-module SPJ.LC.Conditionals where
+module Quagga.LC.Conditionals where
 
-import SPJ.LC.WalkExp
-import SPJ.LC.Abslc
+import Quagga.LC.WalkExp
+import Quagga.LC.Abslc
 
 transformConditionals :: Exp -> Exp
 transformConditionals exp = walkExp transformConditionals' exp where

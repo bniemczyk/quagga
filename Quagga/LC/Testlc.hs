@@ -5,18 +5,16 @@ module Main where
 import IO ( stdin, hGetContents )
 import System ( getArgs, getProgName )
 
-import SPJ.LC.Lexlc
-import SPJ.LC.Parlc
-import SPJ.LC.Printlc
-import SPJ.LC.Abslc
-import SPJ.LC.Genhaskell
+import Quagga.LC.Lexlc
+import Quagga.LC.Parlc
+import Quagga.LC.Skellc
+import Quagga.LC.Printlc
+import Quagga.LC.Abslc
 
-import SPJ.LC.ErrM
-import SPJ.LC.Simplify
 
-import Data.Binary
-import SPJ.LC.ByteCode
-import qualified Data.ByteString.Lazy as BS
+
+
+import Quagga.LC.ErrM
 
 type ParseFun a = [Token] -> Err a
 
@@ -27,23 +25,18 @@ type Verbosity = Int
 putStrV :: Verbosity -> String -> IO ()
 putStrV v s = if v > 1 then putStrLn s else return ()
 
-runFile v p f = readFile f >>= run v p
+runFile :: (Print a, Show a) => Verbosity -> ParseFun a -> FilePath -> IO ()
+runFile v p f = putStrLn f >> readFile f >>= run v p
 
+run :: (Print a, Show a) => Verbosity -> ParseFun a -> String -> IO ()
 run v p s = let ts = myLLexer s in case p ts of
            Bad s    -> do putStrLn "\nParse              Failed...\n"
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> BS.putStr . encode $ simplifyProg tree
-           -- Err e -> putStrLn e
+           Ok  tree -> do putStrLn "\nParse Successful!"
+                          showTree v tree
 
-simplify v p s = let ts = myLLexer s in case p ts of
-           Bad s    -> do putStrLn "\nParse              Failed...\n"
-                          putStrV v "Tokens:"
-                          putStrV v $ show ts
-                          putStrLn s
-           Ok tree -> putStrLn $ printTree (simplifyProg tree)
-           -- Err e -> putStrLn e
 
 
 showTree :: (Show a, Print a) => Int -> a -> IO ()
@@ -56,6 +49,10 @@ main :: IO ()
 main = do args <- getArgs
           case args of
             [] -> hGetContents stdin >>= run 2 pProgram
-            ["-ls"] -> hGetContents stdin >>= simplify 2 pProgram
             "-s":fs -> mapM_ (runFile 0 pProgram) fs
             fs -> mapM_ (runFile 2 pProgram) fs
+
+
+
+
+

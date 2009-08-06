@@ -1,8 +1,8 @@
-module SPJ.LC.Genhaskell (genhaskell) where
+module Quagga.LC.Genhaskell (genhaskell) where
 
 import Text.PrettyPrint
-import SPJ.LC.Abslc
-import SPJ.LC.ErrM
+import Quagga.LC.Abslc
+import Quagga.LC.ErrM
 type Result = Err Doc
 
 failure :: Show a => a -> Result
@@ -41,7 +41,7 @@ transProgram :: Program -> Result
 transProgram x = case x of
   Prog stms  -> do
     stms' <- return $ map transStm stms
-    runtime' <- return $ text "import SPJ.LC.Runtime"
+    runtime' <- return $ text "import Quagga.LC.Runtime"
     return $ concatDocs "\n\n" (runtime' : (map (\st -> let Ok stm = transStm st in stm) stms))
 
 transStm :: Stm -> Result

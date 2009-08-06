@@ -1,7 +1,7 @@
-module SPJ.LC.Curry (curryExps) where
+module Quagga.LC.Curry (curryExps) where
 
-import SPJ.LC.Abslc
-import SPJ.LC.WalkExp
+import Quagga.LC.Abslc
+import Quagga.LC.WalkExp
 
 curryExps :: Exp -> Exp
 curryExps e = walkExp curry' e
