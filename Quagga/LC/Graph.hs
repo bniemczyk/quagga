@@ -23,7 +23,7 @@ uniqRef env val =
 data QuaggaGraph = 
     QString String
     | QInt Integer
-	| QBoolean Bool
+    | QBoolean Bool
     | QBuiltin String
     | QApp { leftQGraph :: IORef QuaggaGraph, rightQGraph :: IORef QuaggaGraph }
     deriving (Eq)
@@ -60,6 +60,9 @@ selectRedex graph stack =
             QApp left right -> selectRedex left (right : graph : stack)
             QBuiltin builtin -> return (graph', graph : stack)
 
+qgDebug :: String -> IO ()
+qgDebug msg = return () -- putStrLn msg
+
 qgReduce :: QuaggaAction
 
 qgReduce (QBuiltin "_Y") (self:h:parent:stack) =
@@ -67,16 +70,19 @@ qgReduce (QBuiltin "_Y") (self:h:parent:stack) =
         y' <- newIORef $ QBuiltin "_Y"
         y <- newIORef $ QApp y' h
         let full = QApp h y
+        qgDebug "Y reduce"
         writeIORef parent full
 
 qgReduce (QBuiltin "_I") (self:arg:parent:_) =
     do
         arg' <- readIORef arg
+        qgDebug "I reduce"
         writeIORef parent arg'
 
 qgReduce (QBuiltin "_K") (self:c:_:_:parent:_) =
     do
         c' <- readIORef c
+        qgDebug "K reduce"
         writeIORef parent c'
 
 qgReduce (QBuiltin "_S") (self:f:_:g:_:x:parent:stack) =
@@ -84,59 +90,66 @@ qgReduce (QBuiltin "_S") (self:f:_:g:_:x:parent:stack) =
         left <- newIORef $ QApp f x
         right <- newIORef $ QApp g x
         full <- return $ QApp left right
+        qgDebug "S reduce"
         writeIORef parent full
 
 qgReduce (QBuiltin "*") (self:a:_:b:parent:_) =
-	do
-		reduceQuaggaGraph a
-		reduceQuaggaGraph b
-		QInt a' <- readIORef a
-		QInt b' <- readIORef b
-		writeIORef parent $ QInt $ a' * b'
+    do
+        reduceQuaggaGraph a
+        reduceQuaggaGraph b
+        QInt a' <- readIORef a
+        QInt b' <- readIORef b
+        qgDebug "* reduce"
+        writeIORef parent $ QInt $ a' * b'
 
 qgReduce (QBuiltin "/") (self:a:_:b:parent:_) =
-	do
-		reduceQuaggaGraph a
-		reduceQuaggaGraph b
-		QInt a' <- readIORef a
-		QInt b' <- readIORef b
-		writeIORef parent $ QInt $ a' `div` b'
+    do
+        reduceQuaggaGraph a
+        reduceQuaggaGraph b
+        QInt a' <- readIORef a
+        QInt b' <- readIORef b
+        qgDebug "/ reduce"
+        writeIORef parent $ QInt $ a' `div` b'
 
 qgReduce (QBuiltin "+") (self:a:_:b:parent:_) =
-	do
-		reduceQuaggaGraph a
-		reduceQuaggaGraph b
-		QInt a' <- readIORef a
-		QInt b' <- readIORef b
-		writeIORef parent $ QInt $ a' + b'
+    do
+        reduceQuaggaGraph a
+        reduceQuaggaGraph b
+        QInt a' <- readIORef a
+        QInt b' <- readIORef b
+        qgDebug "+ reduce"
+        writeIORef parent $ QInt $ a' + b'
 
 qgReduce (QBuiltin "-") (self:a:_:b:parent:_) =
-	do
-		reduceQuaggaGraph a
-		reduceQuaggaGraph b
-		QInt a' <- readIORef a
-		QInt b' <- readIORef b
-		writeIORef parent $ QInt $ a' - b'
+    do
+        reduceQuaggaGraph a
+        reduceQuaggaGraph b
+        QInt a' <- readIORef a
+        QInt b' <- readIORef b
+        qgDebug "- reduce"
+        writeIORef parent $ QInt $ a' - b'
 
 qgReduce (QBuiltin "==") (self:a:_:b:parent:_) =
-	do
-		reduceQuaggaGraph a
-		reduceQuaggaGraph b
-		a' <- readIORef a
-		b' <- readIORef b
-		writeIORef parent $ QBoolean $ a' == b'
+    do
+        reduceQuaggaGraph a
+        reduceQuaggaGraph b
+        a' <- readIORef a
+        b' <- readIORef b
+        qgDebug "== reduce"
+        writeIORef parent $ QBoolean $ a' == b'
 
 qgReduce (QBuiltin "_IF") (self:pred:_:ontrue:_:onfalse:parent:_) =
-	do
-		reduceQuaggaGraph pred
-		QBoolean b <- readIORef pred
-		if b
-			then do
-				ontrue <- readIORef ontrue
-				writeIORef parent ontrue
-			else do
-				onfalse <- readIORef onfalse
-				writeIORef parent onfalse
+    do
+        reduceQuaggaGraph pred
+        QBoolean b <- readIORef pred
+        qgDebug "IF reduce"
+        if b
+            then do
+                ontrue <- readIORef ontrue
+                writeIORef parent ontrue
+            else do
+                onfalse <- readIORef onfalse
+                writeIORef parent onfalse
 
 qgReduce exp stack = error $ "Cannot reduce graph: " ++ show exp
 

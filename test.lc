@@ -1,37 +1,15 @@
+// demonstrates letrec
 fact = 
     letrec f = lambda n . if n == 1 then 1 else n * f (n - 1) in
     f ;
 
+// demonstrates data packing
 trip = lambda a b c . { a, b, c } ;
 
+// demonstrates data unpacking
 hundred = 
     let { x, y, z } = trip 2 40 20 in 
     (x * y) + z ;
 
-sqr = lambda n . n * n ;
-
-zero = { } ;
-one = { 1 } ;
-two = { 1, 2 } ;
-three = { 1, 2, 3 } ;
-
-nil = { } ;
-
-cons = lambda h tail . { h, tail } ;
-
-head = lambda lst . 
-    let { h, t } = lst in
-    h ;
-
-tail = lambda lst .
-    let { h, t } = lst in
-    t ;
-
-closure = lambda m n . m ;
-
-closure2 = lambda a b c . a ;
-
-twenty_five = let sqr = lambda n . n * n in sqr 5 ;
-
-// main = fact (sqr 2) + hundred ;
+// main is executed by qlcr
 main = fact 5 ;
