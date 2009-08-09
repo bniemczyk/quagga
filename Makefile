@@ -21,10 +21,8 @@ sdist: FORCE
 	runhaskell Setup.hs sdist
 
 test: test.lc FORCE
-	# $(CPP) test.lc | dist/build/qlcc/qlcc > test.lcb
-	$(CPP) test.lc | dist/build/qlch/qlch | tee test.hs
-	ghc --make test.hs -fglasgow-exts
-	./test
+	$(CPP) test.lc | dist/build/qlcc/qlcc > test.lcb
+	dist/build/qlcr/qlcr test.lcb
 
 abs: build
 	ghc --make Quagga/LC/Testlc.hs

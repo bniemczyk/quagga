@@ -26,6 +26,8 @@ data Exp =
  | TupleTerm [Exp]
  | ConstantStringTerm String
  | ConstantIntTerm Integer
+ | ConstantTrue
+ | ConstantFalse
  | VariableTerm Identifier
  | ApplicationTerm Exp Exp
  | AbstractionTerm [Identifier] Exp

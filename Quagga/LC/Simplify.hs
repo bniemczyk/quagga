@@ -8,6 +8,7 @@ import Quagga.LC.Conditionals
 import Quagga.LC.WalkExp
 import Quagga.LC.Tuple
 import Quagga.LC.Curry
+import Quagga.LC.ByteCode
 
 simplifyExp = walkExp . iterative $
         -- convert all expressions to nothing but applications of a fixed set of combinators
@@ -57,3 +58,17 @@ simplifyExp = walkExp . iterative $
 simplifyStmt (Equality id e) = Equality id $ simplifyExp e
 
 simplifyProg (Prog stms) = Prog $ map simplifyStmt stms
+
+builtins = ["_Y", "_S", "_I", "_K", "*", "/", "+", "-", "==", "_IF"]
+
+getStandaloneMain :: Program -> Exp
+getStandaloneMain (Prog stmts) = walkExp replaceVars $ findexp "main"
+    where
+        findexp expName = case filter (\(Equality (Identifier id) _) -> id == expName) stmts of
+            [(Equality _ e)] -> walkExp replaceVars e
+            [] -> error $ "Could not find function " ++ expName
+            _ -> error $ "multiple definitions of function " ++ expName
+        replaceVars (VariableTerm (Identifier id)) = case [ b | b <- builtins, b == id ] of
+            [primitive] -> VariableTerm (Identifier id)
+            [] -> findexp id
+        replaceVars nonvar = nonvar

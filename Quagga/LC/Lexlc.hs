@@ -90,7 +90,7 @@ eitherResIdent tv s = treeFind resWords
                               | s > a  = treeFind right
                               | s == a = t
 
-resWords = b "lambda" (b "if" (b "else" N N) (b "in" N N)) (b "letrec" (b "let" N N) (b "then" N N))
+resWords = b "lambda" (b "if" (b "false" (b "else" N N) N) (b "in" N N)) (b "then" (b "letrec" (b "let" N N) N) (b "true" N N))
    where b s = B s (TS s)
 
 unescapeInitTail :: String -> String

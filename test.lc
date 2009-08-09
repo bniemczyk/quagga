@@ -15,6 +15,8 @@ one = { 1 } ;
 two = { 1, 2 } ;
 three = { 1, 2, 3 } ;
 
+nil = { } ;
+
 cons = lambda h tail . { h, tail } ;
 
 head = lambda lst . 
@@ -31,5 +33,5 @@ closure2 = lambda a b c . a ;
 
 twenty_five = let sqr = lambda n . n * n in sqr 5 ;
 
-main = 
-    putStrLn (show (fact (sqr 2) + hundred)) ;
+// main = fact (sqr 2) + hundred ;
+main = fact 5 ;

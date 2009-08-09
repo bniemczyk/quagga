@@ -1,8 +1,9 @@
-module Quagga.LC.ByteCode (encode, decode) where
+module Quagga.LC.ByteCode (loadBytecodeFile, loadBytecodeFiles, encode, decode) where
 
 import Control.Monad
 import Data.Binary
 import Quagga.LC.Abslc
+import System.IO
 
 instance Binary Exp where
     put (ConstantStringTerm s) = put (1 :: Word8) >> put s
@@ -69,3 +70,14 @@ instance Binary Program where
             1 -> do
                 stms <- get
                 return $ Prog stms
+
+loadBytecodeFile :: FilePath -> IO Program
+loadBytecodeFile path = decodeFile path :: IO Program
+
+loadBytecodeFiles :: [FilePath] -> IO Program
+loadBytecodeFiles [path] = loadBytecodeFile path
+loadBytecodeFiles (path:rest) =
+    do
+        Prog prog1 <- loadBytecodeFile path
+        Prog prog2 <- loadBytecodeFiles rest
+        return $ Prog $ prog1 ++ prog2

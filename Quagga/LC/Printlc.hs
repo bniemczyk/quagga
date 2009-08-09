@@ -124,6 +124,8 @@ instance Print Exp where
    TupleTerm exps -> prPrec i 5 (concatD [doc (showString "{") , prt 0 exps , doc (showString "}")])
    ConstantStringTerm str -> prPrec i 5 (concatD [prt 0 str])
    ConstantIntTerm n -> prPrec i 5 (concatD [prt 0 n])
+   ConstantTrue  -> prPrec i 5 (concatD [doc (showString "true")])
+   ConstantFalse  -> prPrec i 5 (concatD [doc (showString "false")])
    VariableTerm identifier -> prPrec i 5 (concatD [prt 0 identifier])
    ApplicationTerm exp0 exp -> prPrec i 4 (concatD [prt 0 exp0 , prt 5 exp])
    AbstractionTerm identifiers exp -> prPrec i 1 (concatD [doc (showString "lambda") , prt 0 identifiers , doc (showString ".") , prt 0 exp])

@@ -46,6 +46,8 @@ transExp x = case x of
   TupleTerm exps  -> failure x
   ConstantStringTerm str  -> failure x
   ConstantIntTerm n  -> failure x
+  ConstantTrue  -> failure x
+  ConstantFalse  -> failure x
   VariableTerm identifier  -> failure x
   ApplicationTerm exp0 exp  -> failure x
   AbstractionTerm identifiers exp  -> failure x

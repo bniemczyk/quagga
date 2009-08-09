@@ -4,7 +4,7 @@ import Quagga.LC.Abslc
 import Quagga.LC.WalkExp
 
 removeAbstractions :: Exp -> Exp
-removeAbstractions exp = optimize $ (walkExp removeAbstractions') exp
+removeAbstractions exp = (walkExp removeAbstractions') exp
     where
         removeAbstractions' (AbstractionTerm (id:[]) body) = case body of
             ApplicationTerm e1 e2 -> s [id] e1 e2

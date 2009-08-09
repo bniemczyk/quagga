@@ -18,6 +18,8 @@ import Data.Binary
 import Quagga.LC.ByteCode
 import qualified Data.ByteString.Lazy as BS
 
+import Quagga.LC.Graph
+
 type ParseFun a = [Token] -> Err a
 
 myLLexer = myLexer

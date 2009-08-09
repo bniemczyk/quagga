@@ -23,12 +23,14 @@ import Quagga.LC.ErrM
  ')' { PT _ (TS ")") }
  '.' { PT _ (TS ".") }
  'else' { PT _ (TS "else") }
+ 'false' { PT _ (TS "false") }
  'if' { PT _ (TS "if") }
  'in' { PT _ (TS "in") }
  'lambda' { PT _ (TS "lambda") }
  'let' { PT _ (TS "let") }
  'letrec' { PT _ (TS "letrec") }
  'then' { PT _ (TS "then") }
+ 'true' { PT _ (TS "true") }
 
 L_quoted { PT _ (TL $$) }
 L_integ  { PT _ (TI $$) }
@@ -88,6 +90,8 @@ Exp5 : '(' Exp ')' { PExp $2 }
   | '{' ListExp '}' { TupleTerm $2 }
   | String { ConstantStringTerm $1 }
   | Integer { ConstantIntTerm $1 }
+  | 'true' { ConstantTrue }
+  | 'false' { ConstantFalse }
   | Identifier { VariableTerm $1 }
   | '(' Exp ')' { $2 }
 

@@ -6,21 +6,10 @@ Author:			Brandon Niemczyk
 Build-Type:		Simple
 License-File:   LICENSE
 
-Library
-    Build-Depends:		base
-    Exposed-modules:	Guic Guic.Widgets Guic.Extjs Csv.Sql Guic.Base Guic.Forms Guic.Compiler Parser Guic.CommonTarget 
-    other-modules:      Util 
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package binary
-
 Executable csv2sql
     Main-Is: csv2sql.hs
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -cpp
-
-Executable extjs-gen
-    Main-Is: extjs-gen.hs
-    Build-Depends: base
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp
 
 Executable qlch
     Main-Is: Quagga/qlch.hs
@@ -30,4 +19,9 @@ Executable qlch
 Executable qlcc
     Main-Is: Quagga/qlcc.hs
     Build-Depends: base
-    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring -package mtl
+
+Executable qlcr
+    Main-Is: Quagga/qlcr.hs
+    Build-Depends: base
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring -package mtl
