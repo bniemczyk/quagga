@@ -20,6 +20,8 @@ transExp x = do
         return expr
       ConstantStringTerm str  -> return $ text $ show str
       ConstantIntTerm n  -> return $ text $ show n
+      ConstantTrue -> return $ text "True"
+      ConstantFalse -> return $ text "False" 
       VariableTerm id  -> transIdentifier id
       ApplicationTerm exp0 exp  -> do
         exp0r <- transExp exp0
@@ -34,7 +36,7 @@ transExp x = do
         ontrue' <- transExp ontrue
         onfalse' <- transExp onfalse
         return $ (text "if") <+> pred' $$ (text "then") <+> ontrue' $$ (text "else") <+> onfalse'
-      exp -> failure exp
+      exp -> error $ "Could not generate haskell for: " ++ show exp
     return $ parens expr
 
 transProgram :: Program -> Result

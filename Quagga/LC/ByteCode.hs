@@ -22,6 +22,8 @@ instance Binary Exp where
             "_IF" -> put' 10
             sym -> put' 254 >> put sym
         where put' (n :: Word8) = put (4 :: Word8) >> put n
+    put (ConstantTrue) = put (5 :: Word8)
+    put (ConstantFalse) = put (6 :: Word8)
     put bad = error $ "Cannot create bytecode for: " ++ show bad
     get = do
             tag <- getWord8
@@ -46,6 +48,8 @@ instance Binary Exp where
                             sym <- get
                             return $ VariableTerm (Identifier sym)
                     where var id = return $ VariableTerm (Identifier id)
+                5 -> return ConstantTrue
+                6 -> return ConstantFalse
 
 instance Binary Stm where
     put (Equality (Identifier id) exp) = do

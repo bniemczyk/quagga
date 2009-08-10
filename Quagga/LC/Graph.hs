@@ -6,8 +6,9 @@ import Control.Monad.List
 import Control.Monad.Trans
 import Quagga.LC.Abslc
 import Quagga.LC.ByteCode
-import Data.Binary
 import System.IO
+import Text.PrettyPrint
+import Control.Monad.State
 
 uniqRef :: Eq a => [IORef a] -> a -> IO ([IORef a], IORef a)
 uniqRef env val =
@@ -28,16 +29,6 @@ data QuaggaGraph =
     | QApp { leftQGraph :: IORef QuaggaGraph, rightQGraph :: IORef QuaggaGraph }
     deriving (Eq)
 
-getOp :: IORef QuaggaGraph -> IO (String, [IORef QuaggaGraph])
-getOp graph = getOp' graph []
-    where
-    getOp' graph stack = do
-        graph' <- readIORef graph
-        case graph' of
-            (QApp left right) -> getOp' left (right:stack)
-            (QBuiltin name) -> return (name, stack)
-
-
 -- source graph -> stack
 type QuaggaAction = QuaggaGraph -> [IORef QuaggaGraph] -> IO ()
 
@@ -48,14 +39,36 @@ reduceQuaggaGraph graph =
         case graph' of
             QApp left right -> do
                 (g,s) <- selectRedex graph []
-                qgReduce g s
-                reduceQuaggaGraph graph
+                if enoughArgs (length s) g
+                    then do
+                        qgReduce g s
+                        reduceQuaggaGraph graph
+                    else
+                        return ()
             _ -> return ()
+    where
+        enoughArgs count (QBuiltin op) = let Just n = lookup op needed in count >= 1 + (2 * n)
+        needed = [
+            ("_Y", 2), 
+            ("_IF", 3),
+            ("_I", 1),
+            ("_K", 2),
+            ("_S", 3),
+            ("_B", 3),
+            ("_C", 3),
+            ("_SO", 4),
+            ("==", 2),
+            ("+", 2),
+            ("-", 2),
+            ("*", 2),
+            ("/", 2)
+            ]
 
 selectRedex :: IORef QuaggaGraph -> [IORef QuaggaGraph] -> IO (QuaggaGraph, [IORef QuaggaGraph])
 selectRedex graph stack = 
     do
         graph' <- readIORef graph
+        -- qgDebug $ "selecting redex from graph " ++ show graph'
         case graph' of
             QApp left right -> selectRedex left (right : graph : stack)
             QBuiltin builtin -> return (graph', graph : stack)
@@ -66,12 +79,8 @@ qgDebug msg = return () -- putStrLn msg
 qgReduce :: QuaggaAction
 
 qgReduce (QBuiltin "_Y") (self:h:parent:stack) =
-    do
-        y' <- newIORef $ QBuiltin "_Y"
-        y <- newIORef $ QApp y' h
-        let full = QApp h y
-        qgDebug "Y reduce"
-        writeIORef parent full
+        qgDebug "Y reduce" >>
+        writeIORef parent (QApp h parent)
 
 qgReduce (QBuiltin "_I") (self:arg:parent:_) =
     do
@@ -85,13 +94,33 @@ qgReduce (QBuiltin "_K") (self:c:_:_:parent:_) =
         qgDebug "K reduce"
         writeIORef parent c'
 
-qgReduce (QBuiltin "_S") (self:f:_:g:_:x:parent:stack) =
+qgReduce (QBuiltin "_S") (self:f:_:g:_:x:parent:_) =
     do
         left <- newIORef $ QApp f x
         right <- newIORef $ QApp g x
         full <- return $ QApp left right
         qgDebug "S reduce"
         writeIORef parent full
+
+qgReduce (QBuiltin "_B") (self:f:_:g:_:x:parent:_) =
+    do
+        right <- newIORef $ QApp g x
+        qgDebug "B reduce"
+        writeIORef parent $ QApp f right
+
+qgReduce (QBuiltin "_C") (self:f:_:g:_:x:parent:_) =
+    do
+        left <- newIORef $ QApp f x
+        qgDebug "C reduce"
+        writeIORef parent $ QApp left g
+
+qgReduce (QBuiltin "_SO") (self:c:_:f:_:g:_:x:parent:_) =
+    do
+        gx <- newIORef $ QApp g x
+        fx <- newIORef $ QApp f x
+        left <- newIORef $ QApp c fx
+        qgDebug "SO reduce"
+        writeIORef parent $ QApp left gx
 
 qgReduce (QBuiltin "*") (self:a:_:b:parent:_) =
     do
@@ -129,6 +158,10 @@ qgReduce (QBuiltin "-") (self:a:_:b:parent:_) =
         qgDebug "- reduce"
         writeIORef parent $ QInt $ a' - b'
 
+-- there is some extra logic in here because it is important
+-- that lists can be compared to nil without being evaluated
+-- first, otherwise comparing infinite lists will never
+-- terminate
 qgReduce (QBuiltin "==") (self:a:_:b:parent:_) =
     do
         reduceQuaggaGraph a
@@ -151,12 +184,13 @@ qgReduce (QBuiltin "_IF") (self:pred:_:ontrue:_:onfalse:parent:_) =
                 onfalse <- readIORef onfalse
                 writeIORef parent onfalse
 
-qgReduce exp stack = error $ "Cannot reduce graph: " ++ show exp
+qgReduce exp stack = error $ "Cannot reduce graph: " ++ show exp ++ ", stack has " ++ show (length stack) ++ " nodes"
 
 instance Show QuaggaGraph where
     show (QString s) = show s
     show (QInt i) = show i
     show (QBuiltin s) = s
+    show (QBoolean b) = show b
     show app@(QApp _ _) = show' 1 app
         where 
             show' level (QApp left right) =
@@ -177,3 +211,32 @@ qgraphFromExp env exp = case exp of
             (env, r1) <- qgraphFromExp env e1
             (env, r2) <- qgraphFromExp env e2
             uniqRef env $ QApp r1 r2
+
+--- everything below is to generate .dot files that can be used to create a visual image of the graph
+dotFromGraph :: QuaggaGraph -> Doc
+dotFromGraph g = let (id, doc) = evalState (dotFromGraph' g) 0 in (text "digraph Main {" $+$ doc) $$ text "}"
+
+dotFromGraph' :: QuaggaGraph -> State Int (Int, Doc)
+
+dotFromGraph' (QBuiltin name) = mkNode name
+dotFromGraph' (QInt i) = mkNode $ show i
+dotFromGraph' (QString s) = mkNode $ show s
+dotFromGraph' (QApp left right) =
+    do
+        left' <- return $ unsafePerformIO $ readIORef left
+        right' <- return $ unsafePerformIO $ readIORef right
+        (lid,ldoc) <- dotFromGraph' left'
+        (rid,rdoc) <- dotFromGraph' right'
+        (id, doc) <- mkNode "@"
+        return $ (id, ldoc $$ rdoc $$ doc $$ connect id lid $$ connect id rid)
+
+connect id1 id2 = text $ show id1 ++ " -> " ++ show id2 ++ ";"
+
+mkNode label = do
+    id <- nextNodeId
+    return (id, text (show id ++ " [label=\"" ++ label ++ "\"]"))
+
+nextNodeId = do
+        nodeId <- get
+        put (nodeId + 1)
+        return nodeId

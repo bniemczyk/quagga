@@ -4,7 +4,7 @@ import Quagga.LC.Abslc
 import Quagga.LC.WalkExp
 
 removeAbstractions :: Exp -> Exp
-removeAbstractions exp = (walkExp removeAbstractions') exp
+removeAbstractions exp = optimize $ (walkExp removeAbstractions') exp
     where
         removeAbstractions' (AbstractionTerm (id:[]) body) = case body of
             ApplicationTerm e1 e2 -> s [id] e1 e2
@@ -13,6 +13,10 @@ removeAbstractions exp = (walkExp removeAbstractions') exp
                 else k $ VariableTerm v
             ConstantStringTerm s -> k $ ConstantStringTerm s
             ConstantIntTerm i -> k $ ConstantIntTerm i
+            ConstantTrue -> k $ ConstantTrue
+            ConstantFalse -> k $ ConstantFalse
+            TupleTerm terms -> k $ TupleTerm $ map removeAbstractions terms
+            other -> error $ "do not know how to remove abstractions from " ++ show other
 
         removeAbstractions' exp = exp
 

@@ -59,7 +59,7 @@ simplifyStmt (Equality id e) = Equality id $ simplifyExp e
 
 simplifyProg (Prog stms) = Prog $ map simplifyStmt stms
 
-builtins = ["_Y", "_S", "_I", "_K", "*", "/", "+", "-", "==", "_IF"]
+builtins = ["_Y", "_S", "_I", "_K", "*", "/", "+", "-", "==", "_IF", "_B", "_C", "_SO"]
 
 getStandaloneMain :: Program -> Exp
 getStandaloneMain (Prog stmts) = walkExp replaceVars $ findexp "main"

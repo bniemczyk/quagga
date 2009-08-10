@@ -25,3 +25,8 @@ Executable qlcr
     Main-Is: Quagga/qlcr.hs
     Build-Depends: base
     ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring -package mtl
+
+Executable qlcgraph
+    Main-Is: Quagga/qlcgraph.hs
+    Build-Depends: base
+    ghc-options:		-fglasgow-exts -package haskell98 -package regex-posix-0.93.1 -package pretty -cpp -package array -package binary -package bytestring -package mtl

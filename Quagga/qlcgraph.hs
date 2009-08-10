@@ -15,12 +15,9 @@ run args = do
     let exp = getStandaloneMain prog
     (qgenv, graphref) <- qgraphFromExp [] exp
     graph <- readIORef graphref
-    --putStrLn $ "reducing graph: " ++ show graph
-    --putStrLn $ ""
-    reduceQuaggaGraph graphref
-    graph <- readIORef graphref
-    putStrLn $ "Answer is: " ++ show graph
-
+    graphdot <- return $ dotFromGraph graph
+    putStrLn $ show graphdot
+    
 main = do
     args <- getArgs
     run args
