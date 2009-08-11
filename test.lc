@@ -66,6 +66,7 @@ fastfact =
     letrec f = lambda n . if n == 1 then 1 else n * f (n - 1) in
     f ;
 
+
 // main is executed by qlcr
-main = fastfact 10000
+main = sum (take 30 naturals)
     ;
