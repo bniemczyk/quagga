@@ -70,5 +70,5 @@ fastfact =
 
 
 // main is executed by qlcr
-main = sum (take 3 evens)
+main = arity { 1, 2 }
     ;
