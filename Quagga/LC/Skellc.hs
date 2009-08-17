@@ -49,6 +49,7 @@ transExp x = case x of
   ConstantTrue  -> failure x
   ConstantFalse  -> failure x
   VariableTerm identifier  -> failure x
+  ArityTerm  -> failure x
   ApplicationTerm exp0 exp  -> failure x
   AbstractionTerm identifiers exp  -> failure x
   LetTerm identifier exp0 exp  -> failure x

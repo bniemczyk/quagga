@@ -25,6 +25,7 @@ ConstantIntTerm.    Exp5 ::= Integer ;
 ConstantTrue.       Exp5 ::= "true" ;
 ConstantFalse.      Exp5 ::= "false" ;
 VariableTerm.       Exp5 ::= Identifier ;
+ArityTerm.          Exp5 ::= "arity" ;
 ApplicationTerm.    Exp4 ::= Exp Exp5 ;
 AbstractionTerm.    Exp1 ::= "lambda" [Identifier] "." Exp ;
 LetTerm.            Exp1 ::= "let" Identifier "=" Exp "in" Exp ;

@@ -1,4 +1,4 @@
-module Quagga.LC.Tuple (packTuples, unpackTuples) where
+module Quagga.LC.Tuple (replaceArity, packTuples, unpackTuples) where
 
 import Quagga.LC.WalkExp
 import Quagga.LC.Abslc
@@ -29,3 +29,9 @@ unpackTuples e = walkExp unpackTuples' e
 
 unp = Identifier "_unpack"
 ar = Identifier "_arity"
+
+replaceArity e = walkExp replaceArity' e
+    where 
+        replaceArity' (ApplicationTerm ArityTerm exp) = ApplicationTerm exp arityArg
+        replaceArity' e = e
+        arityArg = AbstractionTerm [ar] $ AbstractionTerm [unp] $ VariableTerm ar

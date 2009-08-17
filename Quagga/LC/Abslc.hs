@@ -29,6 +29,7 @@ data Exp =
  | ConstantTrue
  | ConstantFalse
  | VariableTerm Identifier
+ | ArityTerm
  | ApplicationTerm Exp Exp
  | AbstractionTerm [Identifier] Exp
  | LetTerm Identifier Exp Exp

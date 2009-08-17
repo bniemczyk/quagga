@@ -16,10 +16,12 @@ tail = lambda lst .
     let { h, t } = lst in
     t ;
 
-map = lambda f lst .
-    if lst == nil // forces evaluation of lst, meaning non-termination for infinite lists
-        then nil
-        else let {h,t} = lst in (cons (f h) (map f t)) ;
+map = 
+    letrec rmap = lambda f lst .
+        if (arity lst) == 0
+            then nil
+            else let {h,t} = lst in (cons (f h) (rmap f t))
+    in rmap;
 
 or = lambda a b . if a then true else b ;
 
@@ -37,21 +39,21 @@ take =
     in tak ;
 
 len = letrec len_ = lambda lst .
-    if lst == {}
+    if (arity lst) == 0 
         then 0
         else 1 + len_ (tail lst)
     in len_ ;
 
 foldr =
     letrec zw = lambda f init lst .
-        if lst == nil
+        if (arity lst) == 0
             then init
             else f (head lst) (zw f init (tail lst))
     in zw ;
 
 foldl =
     letrec fl = lambda f init lst .
-        if lst == nil
+        if (arity lst) == 0
             then init
             else let { h, t } = lst in
                 (fl f (f init h)) t
@@ -68,5 +70,5 @@ fastfact =
 
 
 // main is executed by qlcr
-main = let { a, b } = { 3, 4 } in a + b
+main = sum (take 3 evens)
     ;

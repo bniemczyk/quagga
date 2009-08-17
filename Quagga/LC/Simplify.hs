@@ -14,7 +14,7 @@ simplifyExp = walkExp . iterative $
         -- convert all expressions to nothing but applications of a fixed set of combinators
         -- this should run last (and may be skipped while debugging, because it makes the
         -- output hard to understand)
-        -- removeAbstractions . 
+        removeAbstractions . 
 
         -- beta reduction, but only reductions that are safe and don't stop
         -- us from being fully lazy
@@ -30,7 +30,7 @@ simplifyExp = walkExp . iterative $
         transformConditionals . 
 
         -- translates { foo, bar } into simple lambda calculus
-        packTuples . unpackTuples .
+        replaceArity . packTuples . unpackTuples .
 
         -- change all multi-variable functions into curried single-var functions
         curryExps .

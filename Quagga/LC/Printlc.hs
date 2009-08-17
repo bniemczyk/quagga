@@ -127,6 +127,7 @@ instance Print Exp where
    ConstantTrue  -> prPrec i 5 (concatD [doc (showString "true")])
    ConstantFalse  -> prPrec i 5 (concatD [doc (showString "false")])
    VariableTerm identifier -> prPrec i 5 (concatD [prt 0 identifier])
+   ArityTerm  -> prPrec i 5 (concatD [doc (showString "arity")])
    ApplicationTerm exp0 exp -> prPrec i 4 (concatD [prt 0 exp0 , prt 5 exp])
    AbstractionTerm identifiers exp -> prPrec i 1 (concatD [doc (showString "lambda") , prt 0 identifiers , doc (showString ".") , prt 0 exp])
    LetTerm identifier exp0 exp -> prPrec i 1 (concatD [doc (showString "let") , prt 0 identifier , doc (showString "=") , prt 0 exp0 , doc (showString "in") , prt 0 exp])

@@ -22,6 +22,7 @@ import Quagga.LC.ErrM
  '(' { PT _ (TS "(") }
  ')' { PT _ (TS ")") }
  '.' { PT _ (TS ".") }
+ 'arity' { PT _ (TS "arity") }
  'else' { PT _ (TS "else") }
  'false' { PT _ (TS "false") }
  'if' { PT _ (TS "if") }
@@ -93,6 +94,7 @@ Exp5 : '(' Exp ')' { PExp $2 }
   | 'true' { ConstantTrue }
   | 'false' { ConstantFalse }
   | Identifier { VariableTerm $1 }
+  | 'arity' { ArityTerm }
   | '(' Exp ')' { $2 }
 
 
