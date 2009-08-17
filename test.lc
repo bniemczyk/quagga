@@ -68,5 +68,5 @@ fastfact =
 
 
 // main is executed by qlcr
-main = sum (take 30 naturals)
+main = let { a, b } = { 3, 4 } in a + b
     ;

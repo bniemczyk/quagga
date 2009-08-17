@@ -21,7 +21,7 @@ sdist: FORCE
 	runhaskell Setup.hs sdist
 
 test: test.lc FORCE
-	# $(CPP) test.lc | dist/build/qlch/qlch > test.hs
+	$(CPP) test.lc | dist/build/qlch/qlch > test.hs
 	$(CPP) test.lc | dist/build/qlcc/qlcc > test.lcb
 	dist/build/qlcgraph/qlcgraph test.lcb > test.dot
 	dist/build/qlcr/qlcr test.lcb
