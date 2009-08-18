@@ -158,10 +158,6 @@ qgReduce (QBuiltin "-") (self:a:_:b:parent:_) =
         qgDebug "- reduce"
         writeIORef parent $ QInt $ a' - b'
 
--- there is some extra logic in here because it is important
--- that lists can be compared to nil without being evaluated
--- first, otherwise comparing infinite lists will never
--- terminate
 qgReduce (QBuiltin "==") (self:a:_:b:parent:_) =
     do
         reduceQuaggaGraph a

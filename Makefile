@@ -23,8 +23,9 @@ sdist: FORCE
 test: test.lc FORCE
 	$(CPP) test.lc | dist/build/qlch/qlch > test.hs
 	$(CPP) test.lc | dist/build/qlcc/qlcc > test.lcb
-	dist/build/qlcgraph/qlcgraph test.lcb > test.dot
-	dist/build/qlcr/qlcr test.lcb
+	$(CPP) lib/stdlib.lc | dist/build/qlcc/qlcc > lib/stdlib.lcb
+	dist/build/qlcgraph/qlcgraph test.lcb lib/stdlib.lcb > test.dot
+	dist/build/qlcr/qlcr test.lcb lib/stdlib.lcb
 
 abs: build
 	ghc --make Quagga/LC/Testlc.hs
@@ -38,6 +39,6 @@ parser: Quagga/lc.cf
 
 pdf: FORCE
 	dvipdf Quagga/LC/Doclc.dvi Quagga/LC/Doclc.pdf
-	okular Quagga/LC/Doclc.pdf 2> /dev/null
+	kpdf Quagga/LC/Doclc.pdf 2> /dev/null
 
 FORCE:

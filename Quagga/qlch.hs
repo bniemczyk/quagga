@@ -30,7 +30,7 @@ run v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> case genhaskell (simplifyProg tree) of
+           Ok tree -> case genhaskell (simplifyProg False tree) of
                 Ok doc -> putStrLn $ show doc
            -- Err e -> putStrLn e
 
@@ -39,7 +39,7 @@ simplify v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> putStrLn $ printTree (simplifyProg tree)
+           Ok tree -> putStrLn $ printTree (simplifyProg False tree)
            -- Err e -> putStrLn e
 
 

@@ -10,11 +10,11 @@ import Quagga.LC.Tuple
 import Quagga.LC.Curry
 import Quagga.LC.ByteCode
 
-simplifyExp = walkExp . iterative $
+simplifyExp skcompile = walkExp . iterative $
         -- convert all expressions to nothing but applications of a fixed set of combinators
         -- this should run last (and may be skipped while debugging, because it makes the
         -- output hard to understand)
-        removeAbstractions . 
+        (if skcompile then removeAbstractions else (\x->x)) . 
 
         -- beta reduction, but only reductions that are safe and don't stop
         -- us from being fully lazy
@@ -55,9 +55,9 @@ simplifyExp = walkExp . iterative $
                         (ConstantIntTerm i2)
         reduce e = e
 
-simplifyStmt (Equality id e) = Equality id $ simplifyExp e
+simplifyStmt skcompile (Equality id e) = Equality id $ simplifyExp skcompile e
 
-simplifyProg (Prog stms) = Prog $ map simplifyStmt stms
+simplifyProg skcompile (Prog stms) = Prog $ map (simplifyStmt skcompile) stms
 
 builtins = ["_Y", "_S", "_I", "_K", "*", "/", "+", "-", "==", "_IF", "_B", "_C", "_SO"]
 

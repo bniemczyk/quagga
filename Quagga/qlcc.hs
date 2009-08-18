@@ -36,7 +36,7 @@ run v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> BS.putStr . encode $ simplifyProg tree
+           Ok tree -> BS.putStr . encode $ simplifyProg True tree
            -- Err e -> putStrLn e
 
 simplify v p s = let ts = myLLexer s in case p ts of
@@ -44,7 +44,7 @@ simplify v p s = let ts = myLLexer s in case p ts of
                           putStrV v "Tokens:"
                           putStrV v $ show ts
                           putStrLn s
-           Ok tree -> putStrLn $ printTree (simplifyProg tree)
+           Ok tree -> putStrLn $ printTree (simplifyProg True tree)
            -- Err e -> putStrLn e
 
 
