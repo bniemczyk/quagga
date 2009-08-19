@@ -19,6 +19,12 @@ map =
 
 or = lambda a b . if a then true else b ;
 
+and = lambda a b . if a 
+                    then if b 
+                        then true 
+                        else false 
+                    else false ;
+
 take =
     letrec tak = lambda n lst .
         if n == 1

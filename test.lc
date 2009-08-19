@@ -21,5 +21,5 @@ fastfact =
     f ;
 
 // main is executed by qlcr
-main = fact 5
+main = hundred
     ;
