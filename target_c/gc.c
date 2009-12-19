@@ -6,8 +6,35 @@
 
 #include "gc.h"
 
+static struct
+{
+    Closure *target;
+    Closure *continuation;
+    jmp_buf gc_jmp;
+    void *top_of_stack;
+} statics;
+
+#define SET_JMP 0
+#define LARGE_STACK 1
+#define LARGE_HEAP 2
+
+void gc_initialize(Closure *target, Closure *continuation)
+{
+gc_init:
+    int how_we_got_here = setjmp(statics.gc_jmp);
+
+    switch(how_we_got_here)
+    {
+        case 0: // we set the jmp
+            top_of_stack = &how_we_got_here;
+            call_closure(target, continuation, 0);
+            break;
+        default:
+    }
+}
+
 /*
- * Before calling this, build your target closure with ALLOC_CLOSURE
+ * Before calling this, allocate memory for your target closure with ALLOC_CLOSURE
  */
 Closure *build_closure(Closure *target, closure_func f, size_t arg_count, ...)
 {
@@ -34,6 +61,9 @@ Closure *build_closure(Closure *target, closure_func f, size_t arg_count, ...)
     return target;
 }
 
+/*
+ * this function will never return
+ */
 void call_closure(Closure *target, Closure *continuation, size_t arg_count, ...)
 {
     va_list ap;
@@ -58,7 +88,6 @@ void call_closure(Closure *target, Closure *continuation, size_t arg_count, ...)
 
         va_end(ap);
 
-        // this should never return
         target->function(&context, continuation);
     } 
     else 

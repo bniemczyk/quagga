@@ -55,4 +55,6 @@ extern void call_closure(Closure *target, Closure *continuation, size_t arg_coun
 
 extern Closure *build_closure(Closure *target, closure_func f, size_t arg_count, ...);
 
+#define MAX_STACK_SIZE (128 * 1024)
+
 #endif
