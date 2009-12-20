@@ -243,11 +243,6 @@ void call_closure(Closure *target, Closure *continuation, size_t arg_count, ...)
         target->context = &context;
     } 
 
-    if(statics.top_of_stack - ((void *)&i) > STACK_SIZE)
-    {
-        collect_stack_vars(target, continuation);
-    }
-
     if(statics.top_of_stack == NULL)
         gc_initialize(target, continuation);
 
