@@ -5,23 +5,32 @@
 
 typedef enum 
 {
-    PVT_REF,
-    PVT_CHAR,
     PVT_INT,
-    PVT_DOUBLE
+    PVT_CLOSURE
 } PrimitiveVarType;
+
+struct Closure_struct;
 
 typedef struct 
 {
-    PrimitiveVarType type;
+    PrimitiveVarType type : 4;
+    unsigned int painted : 1;
+
     union
     {
-        void *reference;
-        char character;
         int integer;
-        double decimal;
+        struct Closure_struct *closure;
     };
+
+    void *heapptr;
 } Variable;
+
+#define ALLOC_VAR(name, var_type) \
+    Variable name; \
+    do { \
+        name.type = var_type; \
+        name.heapptr = NULL; \
+    } while(0)
 
 typedef struct 
 {
