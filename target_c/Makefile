@@ -1,4 +1,4 @@
-CFLAGS=-g -O0
+CFLAGS=-g -O6
 CC=gcc ${CFLAGS}
 LD=gcc ${CFLAGS}
 

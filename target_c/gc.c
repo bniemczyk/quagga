@@ -15,7 +15,7 @@
 #include "gc.h"
 
 #define HEAP_BLOCK_SIZE 128 // allocate 128 vars at a time
-#define STACK_SIZE (128 * 1024)
+#define STACK_SIZE (512 * 1024)
 
 static inline void * heap_alloc(size_t size)
 {
