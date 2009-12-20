@@ -81,9 +81,9 @@ static inline Variable *get_new_heap_var()
     }
 }
 
-void gc_initialize(Closure *target, Closure *continuation)
+static void gc_initialize(Closure *target, Closure *continuation)
 {
-    statics.heap.size = 5;
+    statics.heap.size = 2;
     int how_we_got_here = setjmp(statics.gc_jmp);
 
     switch(how_we_got_here)
@@ -165,6 +165,7 @@ static inline void collect_stack_vars(Closure *target, Closure *continuation)
                     v->closure->context = heap_alloc(sizeof(Context));
                     memcpy(v->closure->context, old, sizeof(Context));
                 }
+                break;
             case PVT_INT:
                 // nothing special needs to be allocated
                 break;
