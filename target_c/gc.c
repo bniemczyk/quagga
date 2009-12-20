@@ -1,8 +1,13 @@
 #include <stdlib.h>
 #include <setjmp.h>
 #include <stdarg.h>
-#include <alloca.h>
 #include <string.h>
+
+#ifdef __MINGW32__
+#include <malloc.h>
+#else
+#include <alloca.h>
+#endif
 
 #include "gc.h"
 
@@ -20,16 +25,16 @@ static struct
 
 void gc_initialize(Closure *target, Closure *continuation)
 {
-gc_init:
     int how_we_got_here = setjmp(statics.gc_jmp);
 
     switch(how_we_got_here)
     {
         case 0: // we set the jmp
-            top_of_stack = &how_we_got_here;
+            statics.top_of_stack = &how_we_got_here;
             call_closure(target, continuation, 0);
             break;
         default:
+	    break;
     }
 }
 
