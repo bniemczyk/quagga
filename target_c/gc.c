@@ -136,7 +136,7 @@ static inline void gc_walk_variable(Variable *var, variable_visitor v_visitor, c
 
 static inline void collect_stack_vars(Closure *target, Closure *continuation)
 {
-    static void paint(Variable *v)
+    void paint(Variable *v)
     {
         if(v->heapptr != NULL) // it's already on the heap
             return;
@@ -144,7 +144,7 @@ static inline void collect_stack_vars(Closure *target, Closure *continuation)
         v->heapptr = get_new_heap_var();
     }
 
-    static void move_to_heap(Variable *v)
+    void move_to_heap(Variable *v)
     {
         size_t i;
 
