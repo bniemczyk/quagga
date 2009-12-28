@@ -2,9 +2,9 @@ CFLAGS=-g -O6
 CC=gcc ${CFLAGS}
 LD=gcc ${CFLAGS}
 
-all: test
+all: gctest
 
-test: test.o gc.o
+gctest: gctest.o gc.o
 	$(LD) -o $@ $^
 
 clean: FORCE

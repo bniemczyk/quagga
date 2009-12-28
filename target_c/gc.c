@@ -252,4 +252,6 @@ void call_closure(Closure *target, Closure *continuation, size_t arg_count, ...)
     }
 
     target->function(target->context, continuation);
+
+    assert(!"closure returned, this should never happen");
 }
