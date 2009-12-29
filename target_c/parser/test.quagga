@@ -1,0 +1,7 @@
+class Myclass
+{
+    const shit = "shit";
+    mutable fuck = 1234012;
+
+    shitplus i = shit ++ i;
+}

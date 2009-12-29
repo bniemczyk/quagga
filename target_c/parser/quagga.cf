@@ -1,12 +1,34 @@
-entrypoints Class ;
+entrypoints Module ;
 
-token Identifier (letter (letter | digit | '_' )*) ;
-
+token UIdent (upper (letter | digit | '_')*) ;
+token LIdent (lower (letter | digit | '_')*) ;
 token InfixToken (('-' | '+' | '/' | '*' | '<' | '>' | '|' | '&')+) ;
 
-Equation.       Equation    ::= PatternMatch "=" Expression ;
+VarTerm.        Term        ::= LIdent ;
+StrTerm.        Term        ::= String ;
+IntTerm.        Term        ::= Integer ;
 
-InfixExp.       Expression  ::= Expression InfixToken Identifier ;
-PrefixExp.      Expression  ::= Identifier
+InfxExp.        Exp         ::= Exp InfixToken Exp ;
+ApplExp.        Exp         ::= Exp Term ;
+ParenExp.       Exp         ::= "(" Exp ")" ;
 
-Class.          Class       ::= "class" Identifier "{" [Equation] "}" ;
+TermPattern.    PatternItem ::= Term ;
+DiscardPattern. PatternItem ::= "_" ;
+separator PatternItem " " ;
+
+Pattern.        Pattern     ::= UIdent [PatternItem] ;
+
+ConstructorArg. ConsArg     ::= LIdent ;
+separator ConsArg " " ;
+
+MutableVar.     ClassItem   ::= "mutable" LIdent "=" Exp ;
+ConstantVar.    ClassItem   ::= "constant" LIdent "=" Exp ;
+Equation.       ClassItem   ::= LIdent Pattern "=" Exp ;
+Constructor.    ClassItem   ::= "constructor" LIdent [ConsArg] "=" Exp ;
+separator ClassItem ";" ;
+terminator ClassItem ";" ;
+
+ClassBody.      ClassBody   ::= "{" [ClassItem] "}" ;
+
+Class.          Module      ::= "class" ClassBody ;
+Singleton.      Module      ::= "object" ClassBody ;
