@@ -30,5 +30,5 @@ terminator ClassItem ";" ;
 
 ClassBody.      ClassBody   ::= "{" [ClassItem] "}" ;
 
-Class.          Module      ::= "class" ClassBody ;
-Singleton.      Module      ::= "object" ClassBody ;
+Class.          Module      ::= "class" UIdent ClassBody ;
+Singleton.      Module      ::= "object" UIdent ClassBody ;
