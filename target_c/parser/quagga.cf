@@ -1,0 +1,12 @@
+entrypoints Class ;
+
+token Identifier (letter (letter | digit | '_' )*) ;
+
+token InfixToken (('-' | '+' | '/' | '*' | '<' | '>' | '|' | '&')+) ;
+
+Equation.       Equation    ::= PatternMatch "=" Expression ;
+
+InfixExp.       Expression  ::= Expression InfixToken Identifier ;
+PrefixExp.      Expression  ::= Identifier
+
+Class.          Class       ::= "class" Identifier "{" [Equation] "}" ;
